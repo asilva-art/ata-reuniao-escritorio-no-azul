@@ -1,0 +1,493 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pauta de Reunião: Reunião de Pendências - 001</title>
+  <style>
+    :root {
+      --bg: #f7f7f5;
+      --card: #ffffff;
+      --text: #1f2328;
+      --muted: #5f6b7a;
+      --line: #e7e8ea;
+      --accent: #0f766e;
+      --accent-soft: #ecfdf5;
+      --shadow: 0 12px 30px rgba(0, 0, 0, 0.06);
+      --radius: 14px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Avenir Next", "Segoe UI", "Helvetica Neue", sans-serif;
+      background:
+        radial-gradient(1200px 500px at 0% -10%, #eefaf8 0%, transparent 50%),
+        radial-gradient(900px 420px at 100% 0%, #f3f6ff 0%, transparent 55%),
+        var(--bg);
+      color: var(--text);
+      line-height: 1.55;
+    }
+
+    .wrap {
+      width: min(1060px, 92vw);
+      margin: 36px auto 56px;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #0f766e 0%, #115e59 58%, #0a4f4a 100%);
+      color: #fff;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 28px;
+      margin-bottom: 22px;
+    }
+
+    .hero h1 {
+      margin: 0 0 10px;
+      font-size: clamp(1.25rem, 2.1vw, 1.8rem);
+      line-height: 1.2;
+      letter-spacing: 0.01em;
+    }
+
+    .meta {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      color: #dff5f3;
+      font-size: 0.95rem;
+    }
+
+    .meta span {
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 999px;
+      padding: 6px 12px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      margin-bottom: 16px;
+      overflow: hidden;
+    }
+
+    .card-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 16px 18px;
+      border-bottom: 1px solid var(--line);
+      background: #fcfcfc;
+    }
+
+    .card-head h2 {
+      margin: 0;
+      font-size: 1.03rem;
+      line-height: 1.3;
+    }
+
+    .head-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      border: 1px solid #c8d6d5;
+      background: #fff;
+      color: #134e4a;
+      border-radius: 999px;
+      font-size: 0.84rem;
+      padding: 8px 12px;
+      cursor: pointer;
+      transition: .15s ease;
+    }
+
+    .btn:hover { background: var(--accent-soft); }
+
+    .source {
+      font-size: 0.84rem;
+      color: var(--muted);
+      text-decoration: none;
+      border-bottom: 1px dashed #b7c0c8;
+    }
+
+    .source:hover { color: var(--accent); }
+
+    .content {
+      padding: 18px;
+    }
+
+    pre {
+      margin: 0;
+      white-space: pre-wrap;
+      word-break: break-word;
+      font: 0.92rem/1.56 "SF Mono", Menlo, Consolas, monospace;
+      color: #2a3138;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.93rem;
+    }
+
+    th, td {
+      border: 1px solid var(--line);
+      padding: 10px;
+      vertical-align: top;
+      text-align: left;
+    }
+
+    th {
+      background: #f8fafb;
+      font-weight: 600;
+    }
+
+    .muted { color: var(--muted); }
+    .call-window {
+      display: inline-block;
+      margin-top: 4px;
+      font-size: 0.74rem;
+      color: #7b8795;
+    }
+
+    @media (max-width: 800px) {
+      .card-head {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+      .head-actions {
+        width: 100%;
+      }
+      .btn { width: fit-content; }
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <section class="hero">
+      <h1>Pauta de Reunião: Reunião de Pendências - 001</h1>
+      <div class="meta">
+        <span>Empresa: Escritório No Azul</span>
+        <span>Data: 04/03/2026</span>
+        <span>Participantes: Layene Oliveira (Skala Lançamentos) e Alencar Silva (Lube Digital)</span>
+      </div>
+    </section>
+
+    <section class="card" id="bloco-1">
+      <header class="card-head">
+        <h2>Bloco 1 • Pauta de Reunião: Consolidação Financeira e Societária</h2>
+        <div class="head-actions">
+          <a class="source" href="https://docs.google.com/document/d/18Dh6dTBss7LWe0-5csryNfVEYGrEzj7w5-ggWpo8wqo/edit?usp=sharing" target="_blank" rel="noopener noreferrer">Arquivo original</a>
+          <button class="btn" data-target="content-1">Recolher conteúdo</button>
+        </div>
+      </header>
+      <div class="content" id="content-1">
+<pre>Pauta de Reunião: Reunião de Pendências - 001
+
+Empresa: Escritório No Azul | Data: 04/03/2026
+Participantes: Layene Oliveira (Skala Lançamentos) e Alencar Silva (Lube Digital)
+1. Retroativo &amp; Fechamento (Jan/Fev 2026)
+	•	Conciliação de Despesas: Definir método para lançar gastos de Jan/Fev (Planilha ou App?).
+	•	Caixa de Despesas x Receitas
+Comentário 04/03/26: {- Janeiro: +- Skala / +-Lube = Encontro de contas (A)
+- Fevereiro: +- Skala / +-Lube = Encontro de contas (B) último dia do mês de fev. 28/02
+- Março: Aporte para vida nova via banco Itáu, com com encontro de contas realizado}
+	•	Unificação: Validar o corte definitivo para gestão 100% centralizada a partir de Março/2026.
+Comentário 04/03/26: {(1) Fica acordado em fazermos os fechamentos mês a mês com evento caixa e não evento competência, tendo como data de corte o dia 28/02/26, após essa data, iremos partir para aporte financeiro de ambos os lados com foco em caixa operacional e nesse momento faremos novamente o encontro de contas.}
+2. Gestão de Pessoas &amp; Pagamentos
+	•	Logística de Salários (Venc. 5º dia útil): Definir conta centralizadora.
+	•	Sugestão: Conta Itaú com Lay como operadora.
+Comentário 04/03/26: {alterar os pagamentos para o último dia do mês, para termos uma visão firme de caixa sempre dentro das movimentações do mês vigente, sendo que em março de 2026 ficará com uma saída anormal para fazermos esse movimento}
+	•	Aporte Operacional: Decidir entre "rateio" imediato ou aporte inicial dos sócios para cobrir a folha de Março.
+Comentário 04/03/26: {Verificar valores conforme item (1) para podermos fazer o aporte financeiro logo em março, verificar tb extrato Itaú atualizado, assim como todos os movimentos “caixa” atualizados após o dia 22/02/26. Ponto de atenção a venda realizada para Ana Alonso, verificar se a coprodução entrou para Skala}
+3. Modelo de Comissionamento
+	•	Fran: Confirmar se o modelo da apresentação de Jan/2026 está mantido e encerrado.
+	•	Renata: Definir regra para novas mentoradas (LTV/Entrada) e manutenção do Club.
+Comentário 04/03/26: {Vamos precisar conversar com Thiago sobre a forma de remuneração variável, atualmente está com 3% das vendas de Gold e Diamond para a SDR (Fran) e 5% das vendas de Club para a CS (Renata)}
+
+4. Folha de Pagamento Sócios (Pró-labore)
+	•	Definição de Valores: Validar ancoragem (Vivi 2x / Sócios x).
+	•	Proposta: Vivi (Yk) | Alencar, Thiago e Lay (Xk cada).
+	•	Custo Fixo Total: Somar Pró-labore + Equipe para fechamento do "Ponto de Equilíbrio".
+Comentário 04/03/26: {Reestruturação de empresa e caixa, nesse momento, a ideia seria flat pra todos e a Lay comentou também um seguro de vida para o expert, para que não tenha riscos para o negócio de forma elevada. Necessário conversarmos de forma que chegarmos num ponto comum, sendo que a visão é de forma igualitária e não diferente, à medida que a empresa for amadurecendo a gente vai revisando através de conversas e tomadas de decisões unificadas.}
+5. Blindagem e Royalties (Escritório No Azul ↔ VM Arquitetos)
+	•	[ ] Equilíbrio de Agenda: Definir compensação financeira pela indisponibilidade da Vivi no VM.
+	•	Proposta: 10% do lucro líquido ou mínimo de 6k/mês de royalties para o VM Arquitetos.
+Comentário 04/03/26: {Ponto Lay: Tudo que for criado com a audiência do Escritório No Azul deve ser visto como Escritório No Azul como sócios, como exemplo, uma marca procura o ENA para fazer a divulgação usando o Instagram do ENA deverá ficar como sociedade do ENA, caso também se crie uma ou outras novas empresas a partir do ENA, também deverá ser com visão societária da base do ENA. A cláusula de 10% não seria algo viável para esse momento através da visão da Lay. Outro exemplo, ENA evoluindo muito, lançamentos avançando de forma substancial e do nada vem uma marca pedindo para realizar uma contratação, se for o uso da imagem do Instagram vindo do VM+Arquitetos, fica para VM+Arquitetos, mas se for do Instagram do ENA, ficará do ENA. Outro ponto, neste momento, não temos caixa e não faria sentido nesse momento. Esse ponto seria algo para podermos tratar ao longo do tempo, e deixar em aberto ambos os pontos, tanto de um lado quanto do outro, pois o contrário também pode acontecer, do VM+Arquitetos ser beneficiado pelo movimento do ENA}.
+Ponto Alencar: Necessário verificar as novas empresas, pois existe um VM Hub, pensado logo… “voltar nesse assunto na próxima agenda de alinhamento e deliberação de pendências”.}
+
+{Abaixo itens pendentes que não foram tratados}
+6. Jurídico e Estrutura Societária
+	•	[ ] CNPJ e Contrato: Iniciar levantamento de dados para novo contrato.
+	•	[ ] Cláusula de Dissolução: Validar permanência da marca com a Vivi em caso de saída de sócios.
+	•	[ ] Memorando de Entendimentos (MoU): Adaptar a minuta do antigo escritório de SP.
+7. Compliance e Documentação
+	•	[ ] Notas Fiscais: Fluxo de emissão das vendas retroativas.
+	•	[ ] Contratos com Clientes: Revisão e envio das minutas para as clientes já ativas.</pre>
+      </div>
+    </section>
+
+    <section class="card" id="bloco-2">
+      <header class="card-head">
+        <h2>Bloco 2 • Reunião iniciada às 2026_03_04 08_56 GMT-03_00 - Anotações do Gemini</h2>
+        <div class="head-actions">
+          <a class="source" href="https://docs.google.com/document/d/1QFYWjnAHI4ZU5gSiuN84fY87UOBtDs6yZ6OehC5lkFc/edit?usp=sharing" target="_blank" rel="noopener noreferrer">Arquivo original</a>
+          <button class="btn" data-target="content-2">Recolher conteúdo</button>
+        </div>
+      </header>
+      <div class="content" id="content-2">
+<pre>📝 Observações
+4 de mar. de 2026
+Reunião em 4 de mar. de 2026 às 08:56 GMT-03:00
+Registros da reunião Transcrição Gravação
+
+Resumo
+Alencar Silva e Administração Skala Lançamentos discutiram a gravação da reunião e a participação da Administração Skala Lançamentos em uma call de vendas para entender o processo, enquanto Alencar Silva mencionou a dificuldade em compartilhar a tela no Meeting. A reunião se concentrou no retroativo de janeiro e fevereiro, analisando as receitas do Escritório Azul e Green, e definindo que as receitas seriam consolidadas em uma planilha de prestação de contas, com o fechamento sendo realizado mês a mês sob a visão de caixa, e a inclusão da venda de Ana Alonso no rateio.
+
+Eles alinharam a remuneração variável das colaboradoras, concordando que o cálculo deve ser sobre o valor líquido e por visão de caixa, detalhando o pagamento de Fran, e Alencar Silva expressou a necessidade de metas claras para as colaboradoras, enquanto a Administração Skala Lançamentos propôs metas de vendas e o uso de gamificação para incentivos.
+
+Por fim, os participantes discutiram a reestruturação financeira da empresa, incluindo a alteração da logística de pagamento de salários para o último dia do mês, a proposta de um pro labore inicial conservador e igualitário (R$ 4.000 para cada sócio) para Alencar Silva e Administração Skala Lançamentos, e a preocupação de Alencar Silva com a sobrecarga de Viviane e a necessidade de clareza contratual para evitar futuros conflitos, com os próximos passos envolvendo a definição de cláusulas de dissolução e a emissão de notas fiscais retroativas.
+
+Detalhes
+• Gravação da Reunião e Calls de Venda: Alencar Silva e Administração Skala Lançamentos concordaram que gravar a reunião seria ideal para referência futura. Administração Skala Lançamentos expressou interesse em participar de uma call de vendas com Alencar Silva para entender o processo ao vivo, notando que as calls de venda tiveram uma pequena queda (00:00:00). Eles planejaram a participação em uma call de vendas que ocorreria no dia seguinte, pois não havia nenhuma marcada para a tarde do dia da reunião (00:02:23).
+• Dificuldade de Compartilhamento de Tela: Alencar Silva mencionou uma dificuldade em usar o Meeting, onde eles não conseguem compartilhar a tela e ver a outra pessoa simultaneamente, a menos que tenham duas telas (00:02:23). Administração Skala Lançamentos confirmou que é mais difícil visualizar o interlocutor ao compartilhar a tela (00:03:20).
+• Discussão sobre Retroativo de Janeiro e Fevereiro: Alencar Silva preparou uma pauta para discutir assuntos antigos e novos, começando pelo retroativo de janeiro e fevereiro e a consolidação das despesas (00:03:20). Foi preparado um link contendo todas as entradas (receitas) do Escritório Azul para janeiro e fevereiro, independentemente de serem vendas ou pagamentos recorrentes (00:04:13).
+• Análise das Receitas da Green: As receitas listadas no documento incluem todos os movimentos na Green, sendo que Alencar Silva explicou que o documento traz o valor de referência e o valor de rateio (coprodução) (00:05:44). A última data de corte para os dados apresentados foi 22/02, e para fechar o mês de fevereiro, seria necessário importar os extratos restantes da Green (00:07:35).
+• Definição de Antes e Depois da Escala: Alencar Silva definiu que a legenda "Antes de Escala" (AS) se refere a vendas ou movimentações ocorridas antes de 1º de janeiro de 2026, data considerada como o início da atuação da Administração Skala Lançamentos (00:07:35). Exemplos de vendas "Antes de Escala" foram apresentados, incluindo uma venda RCR e o pagamento de Diamond Plus que havia sido parcelado (00:08:45).
+• Atualização Automática dos Dados: Administração Skala Lançamentos perguntou se o documento de receitas era atualizado automaticamente, e Alencar Silva esclareceu que os dados precisam ser importados manualmente, pois a Green não possui API, apenas webhook. Ele mencionou que a data de corte foi 22/02, e a atualização exigiria a importação dos novos extratos até o final de fevereiro (00:10:58).
+• Clareza na Remuneração Variável: Alencar Silva abordou a falta de clareza na remuneração variável das colaboradoras anteriormente, concordando com a reclamação delas. Ele conseguiu traduzir o que havia sido conversado em setembro/outubro em uma linha de raciocínio clara no extrato de janeiro, definindo o pagamento por visão de caixa e não de competência (00:12:02).
+• Detalhamento da Remuneração Variável (Fran): Foi detalhado o cálculo da remuneração variável de Fran, que totalizou R$ 633, considerando o valor líquido e já deduzindo impostos. Essa remuneração baseia-se no que entrou no mês (visão caixa) e foi paga na sexta ou sábado anteriores, sendo considerado um processo completo (00:13:03) (00:20:28).
+• Movimentação Financeira via Boletos e Contas PJ: Alencar Silva explicou que o extrato consolidado inclui os extratos de boletos da conta PJ (Itaú), que entram diretamente na conta sem intermediação da Hotmart (00:14:51) (00:18:37). A criação de um operador para a Administração Skala Lançamentos foi proposta para que eles pudessem ter acesso à conta bancária, o que já foi iniciado com a documentação enviada ao pessoal (00:16:12).
+• Consolidação de Receitas no Hub de Informação: Administração Skala Lançamentos mencionou que R$ 400 entraram diretamente na conta da escala e precisariam ser ajustados no acerto (00:17:00). Alencar Silva sugeriu usar a planilha de prestação de contas como um "hub de informação" para depositar todas as informações de vendas da Green, Hotmart e extrato Itaú (00:17:48).
+• Funil de Vendas e Acompanhamento de Clientes: Foi demonstrado o funil de vendas, que integra as informações da planilha de acompanhamento da Administração Skala Lançamentos (00:23:35). O funil faz o matching das informações para mostrar a jornada do cliente, como a progressão de Workshop, Pix de Compromisso e fechamento na Hotmart ou Itaú (00:24:23) (00:26:27).
+• Análise de Casos Específicos e Funil de Vendas: Alencar Silva exemplificou o caso de uma cliente que fez a jornada via Green, Pix de compromisso e pagou através de boletos do Itaú, confirmando a conversão (00:27:35). Ele citou o caso de Simone Velho, que está convertida, mas o pagamento pode ter ocorrido após o corte de 22/02, necessitando de atualização (00:29:35).
+• Inclusão da Aluna Ana Alonso no Rateio: Alencar Silva e Vivi concordaram que a venda da aluna Ana Alonso, mesmo tendo vindo de um processo anterior, deveria entrar no rateio para a Administração Skala Lançamentos, reconhecendo o poder do workshop (00:31:52). Ana Alonso pagou na Hotmart, e Alencar Silva precisaria ajustar o flag de "Antes de Escala" para incluí-la no rateio (00:50:57) (00:55:40).
+• Acordo sobre Fechamento por Visão Caixa: Foi acordado que os fechamentos de janeiro e fevereiro seriam feitos mês a mês, com visão de caixa (despesas e receitas dentro do mês) (00:35:14) (00:37:31). Alencar Silva explicou que essa dinâmica é necessária para fechar as contas, pois o custo de janeiro não foi arcado pela Administração Skala Lançamentos, e o objetivo é equalizar as receitas e despesas a partir de fevereiro/março (00:34:17).
+• Revisão da Logística de Salários: Alencar Silva e Administração Skala Lançamentos concordaram em alterar a data de pagamento dos salários do quinto dia útil para o último dia do mês, visando ter uma melhor visão de caixa e evitar o atraso na análise de entrada e saída (00:46:03). Essa mudança implicaria em duas saídas em março (o retroativo de fevereiro e o salário de março), normalizando a partir de abril (00:48:57).
+• Revisão da Apresentação de Comissionamento e Complexidade dos Cálculos: Alencar Silva considerou que a apresentação de comissionamento estava OK, mas precisava de revisão em relação à Renata. Anteriormente, as propostas de comissionamento eram muito complexas, o que impedia a realização dos cálculos (00:58:52). A estrutura atual é mais simples, pois um comissionamento complexo só seria adequado em um nível de operação mais ajustado (01:00:04).
+• Proposta de Estrutura de Comissionamento Padrão: Foi discutida a proposta de um comissionamento padrão de 3% para os produtos existentes. Alencar Silva discordou da porcentagem maior proposta para Renata, concordando com a porcentagem de 3% e enfatizando que o comissionamento deve ser calculado sobre o valor líquido, descontando impostos e taxas bancárias (01:00:04).
+• Análise do Percentual de Comissionamento (5% vs 3%): A Administração Skala Lançamentos mencionou que um comissionamento de 5% sobre uma venda de R$ 12.000 (Diamond) resultaria em R$ 600, enquanto 3% resultaria em R$ 375, e que o vendedor deveria ganhar mais (01:02:07). Alencar Silva destacou que Renata não realiza chamadas de vendas (call de venda) e, portanto, aparece em uma seção diferente da estrutura de comissionamento (01:02:52).
+• Origem e Remuneração da Club (Renata): A Club surgiu devido à demanda das alunas/mentoradas por Renata e Vivi (01:02:52). Na época, Vivi e Renata concordaram que, se Renata ajudasse a converter mais alunas para a Club, ela ganharia 100% da comissão. Alencar Silva discordou desse percentual, mencionando que o esforço de uma pessoa estava sendo muito maior do que o da outra (01:03:41).
+• Justificativa para Remuneração Variável de Renata: Alencar Silva concordou que não fazia sentido comissionar Renata pela recorrência, pois o maior esforço dela estava na entrada de novas mentoradas, o que aumenta suas tarefas. No entanto, a remuneração dela não deveria ser igual à de uma pessoa no processo de vendas, exigindo uma avaliação (01:04:56).
+• Necessidade de Metas Claras e Robustez da Empresa: A Administração Skala Lançamentos enfatizou que as colaboradoras precisam ter metas claras. Alencar Silva concordou, mas questionou se a empresa possuía o nível de robustez e cadência suficiente para exigir o cumprimento dessas metas, destacando a necessidade de dar subsídios para que elas pudessem atingir as metas (01:06:02).
+• Metas de Vendas Sugeridas para Saúde da Empresa: A Administração Skala Lançamentos propôs metas de entrada de vendas saudáveis para a empresa: seis Golds, quatro Diamonds e 20 Silvers por mês (01:08:02). Atingir essas metas resultaria em uma entrada de caixa de R$ 147.960 por mês, além de outras ações (01:09:01).
+• Proposta de Gamificação e Incentivos Adicionais: A Administração Skala Lançamentos sugeriu o uso de gamificação e incentivos, como experiências (ex: viagens), além do percentual fixo de 3%, para motivar as colaboradoras e reconhecer sua importância como braços direitos (01:09:01). A gamificação poderia ser usada para alcançar as metas mínimas de funcionamento da empresa, garantindo uma entrada de caixa previsível (01:10:57).
+• Histórico de Falta de Pagamento de Remuneração Variável: Alencar Silva revelou que as colaboradoras nunca receberam a remuneração variável prometida no passado, pois a responsabilidade pelos cálculos era dos ex-sócios, que não mantinham arquivos ou controles (01:15:36). Essa situação resultou em promessas não cumpridas, apesar das altas vendas em alguns meses (01:16:32).
+• Reconhecimento do Esforço da Fran e Risco de Perda: Alencar Silva observou que Fran, em um trabalho de meio período, estava trabalhando no mínimo 12 horas por dia, lidando com o financeiro e o VM, e era a única pessoa a gerar chamadas de vendas (calls) (01:16:32). Esse acúmulo de trabalho e as promessas não cumpridas quase resultaram na perda dela para outros trabalhos (01:17:40).
+• Acúmulo de Leads Desperdiçados e Desorganização no Funil de Vendas: Alencar Silva citou que Fran sempre manteve a cadência e nunca deixou acumular um lead. Em contraste, durante a divisão de tarefas com Rafael, 600 leads foram desperdiçados em três meses, pois ele não os tratava adequadamente, indicando um gap de organização e controle (01:19:34).
+• Metas de Receita e Visão Realista de Crescimento: Alencar Silva concordou com as metas de vendas, mas relembrou a projeção realista feita anteriormente, que visava um faturamento estável de R$ 110.000 a R$ 130.000 por mês (01:21:47). Eles vinham de um período de projeções irrealistas de R$ 300.000 por mês, o que os levou a projetar um crescimento baseado no histórico da empresa (01:23:01).
+• Valor da Renata e Custos Operacionais: A Administração Skala Lançamentos concordou que Renata é "cara" (custando R$ 6.000 por mês, ou R$ 72.000 por ano), mas é fundamental para o acompanhamento dos alunos. Foi observado que é necessário vender uma mentoria Diamond para pagar o salário anual de Renata (01:25:44).
+• Cuidados com a Gamificação e Definição de Metas: Ambos concordaram que a gamificação não deve ser mencionada às colaboradoras antes que o processo esteja definido e as metas estejam claras. A Administração Skala Lançamentos sugeriu manter as colaboradoras atualizadas sobre as metas para que se atinja uma receita de R$ 130.000 a R$ 140.000 por mês, o que geraria uma margem de 30% a 40% (01:37:00).
+• Alinhamento do Pró-labore dos Sócios em Reestruturação: Foi discutida a folha de pagamento e o pró-labore dos sócios (01:52:37). A Administração Skala Lançamentos sugeriu que, no momento da reestruturação e foco no caixa, o pró-labore fosse fixo e igualitário para todos os quatro sócios, propondo R$ 4.000 para cada um (01:53:34) (01:55:51).
+• Prioridade de Caixa e Futuros Dividendos: A Administração Skala Lançamentos propôs uma cláusula para que apenas um pró-labore fosse retirado no futuro, independentemente do valor de caixa, até que a empresa tivesse um caixa extremamente saudável (de muitos meses ou 24 meses) para só então considerar a retirada de dividendos (01:55:51).
+• Impacto do Escritório de Arquitetura (VM) na Mentoria: Alencar Silva expressou preocupação com o VM (escritório de arquitetura) ficando desabastecido devido ao foco no escritório no azul, já que o VM possui um alto custo fixo (R$ 100.000 a R$ 115.000 por mês) e margem mínima (01:44:50) (01:47:19). A manutenção do escritório de arquitetura é importante para a credibilidade da mentoria, pois clientes notaram que outras mentoras não possuíam um escritório (01:48:30).
+• Estrutura Operacional e Envolvimento dos Sócios: Administración Skala Lançamentos e Alencar Silva discutiram a capacidade da operação de vendas e o aumento da equipe, especificamente em relação à Renata e à entrada mensal de novos clientes. Ambos concordaram que o marketing não deve gerar novos entrantes que a operação não consiga suportar, enfatizando a necessidade de um pensamento integrado. Administración Skala Lançamentos expressou que eles e Thiago estão investindo muita energia no negócio e, portanto, o pro labore inicial deve ser igualitário, com a possibilidade de redefinição futura conforme o aumento do caixa (01:57:52).
+• Proposta Inicial de Pro Labore e Conservadorismo Financeiro: Administração Skala Lançamentos propôs um pro labore inicial conservador, sugerindo que este poderia ser de R$ 10.000 para cada casal, ou R$ 5.000 para cada pessoa, no momento em que o caixa está em construção. Eles reforçaram que o aumento do pro labore deve ser gradual e conservador, não saltando de R$ 4.000 para R$ 40.000, e que ajustes seriam feitos à medida que o caixa da empresa crescesse (01:58:42).
+• Redução da Carga de Trabalho de Vivi e Colaboração no Lançamento: A equipe de Administración Skala Lançamentos (eles e Thiago) planeja participar do próximo lançamento para reduzir o tempo que Vivi dedica a falar, diminuindo significativamente a carga horária dela. A ideia é que Administration Skala Lançamentos fale sobre o conteúdo, e Vivi fale sobre tráfego, garantindo que ela não precise falar por oito horas. Alencar Silva notou o impacto positivo da presença de Administration Skala Lançamentos, que está trazendo um "ar limpo" para a família em meio ao cansaço emocional (01:59:45).
+• Valores e Compromisso em um Cenário Econômico Desafiador: Administración Skala Lançamentos ressaltou que a parceria não visa apenas o lucro, mas envolve valores e o desejo de "comer o sal" (compartilhar as dificuldades) com os parceiros, especialmente devido à consistência de Viviane. Eles estão se preparando para um ano com eleições e Copa do Mundo, o que historicamente gera dificuldades no mercado de lançamentos, exigindo muita estruturação e trabalho (02:00:34). Para se dedicar ao máximo ao novo negócio, Administración Skala Lançamentos está realocando a atenção de seus outros negócios, que já possuem processos estruturados e rodam sozinhos (02:01:23).
+• Compensação Financeira para o VM Arquitetos e Equilíbrio de Agenda: Alencar Silva introduziu a proposta de definir uma compensação financeira pela disponibilidade de Vivi no Escritório no Azul, sugerindo 10% do lucro líquido ou um mínimo de R$ 6.000 mensais para o VM Arquitetos (02:02:16). Este ponto visa resolver a questão do Escritório no Azul começar a "patinar" devido à energia da Viviane ser absorvida pela nova parceria, e o foco dela no VM Arquitetos ser crucial para a criação e conversão de clientes (02:03:00). A preocupação principal é que o VM Arquitetos precisa da presença de Viviane para evitar grandes rombos no caixa se as entradas necessárias não ocorrerem em um determinado mês, ao contrário do Escritório no Azul (02:04:19).
+• Posicionamento sobre a Cláusula de Royalties e Propriedade de Audiência: Administração Skala Lançamentos concorda em ajudar a diminuir o tempo de Vivi para que ela se concentre mais na criação de conteúdo, que pode ser aproveitado tanto pelo Escritório no Azul quanto pelo VM Arquitetos (02:05:38). Entretanto, Administração Skala Lançamentos expressou desconforto em incluir a cláusula de royalties (10% do lucro líquido ou R$ 6.000 mensais para o VM Arquitetos) no contrato neste momento, alegando que a empresa ainda não tem caixa para isso. O ponto de vista de Administration Skala Lançamentos é que o Escritório no Azul provavelmente trará mais visibilidade para o VM Arquitetos devido ao investimento em escala e que os avatares (público-alvo) são diferentes, sugerindo que o que refletir no VM Arquitetos será 100% dos parceiros originais (02:11:25).
+• Gerenciamento de Ativos de Audiência e Conflito de Interesses: Administração Skala Lançamentos propôs que qualquer audiência ou ativos criados em conjunto, como patrocínios advindos do Instagram da nova sociedade, devem pertencer à empresa dos quatro sócios. Eles exemplificaram que, se uma marca patrocinar o Escritório no Azul e Vivi fizer a divulgação, o lucro deve ir para a empresa digital dos quatro (02:06:44). Alencar Silva sugeriu que o sistema de royalties simplifica essas questões, tratando o cruzamento de benefícios entre as duas empresas (02:08:30) (02:14:06).
+• Saúde e Sobrecarga de Viviane como Preocupação Central: Alencar Silva revelou uma preocupação com a saúde de Viviane, que tem apresentado sinais de sobrecarga, e a importância de zelar pelo bem-estar dela (02:22:17). Ele mencionou que, em 2023, ele teve que desfazer um negócio porque Viviane estava doente, enfatizando que seu papel como marido é garantir a saúde dela, uma atitude que ele acredita que Administration Skala Lançamentos, como esposa, entenderia (02:23:31) (02:25:22). Administração Skala Lançamentos reconheceu que seu papel é diminuir essa carga, prometendo melhorar a situação de sobrecarga, embora reconhecendo que a situação pode piorar antes de melhorar, devido à fase de reestruturação (02:28:07).
+• Necessidade de Clareza Contratual e Históricos de Parcerias: A discussão evoluiu para a necessidade de clareza nas minutas e contratos para evitar conflitos futuros, citando o exemplo de uma parceria anterior que desmoronou devido à falta de clareza sobre o uso de leads e o consequente conflito de interesses (02:18:06). Alencar Silva enfatizou que todo contrato deve nascer com transparência (02:21:01).
+• Próximos Passos e Definições Legais/Financeiras: Alencar Silva delineou os próximos pontos a serem tratados, incluindo a definição de cláusulas de dissolução, a emissão de notas fiscais retroativas para fechar os meses de janeiro e fevereiro, e a revisão dos contratos com clientes. Eles concordaram em dar sequência às discussões sobre CNPJ e contrato, que se tornariam um memorando de entendimento (02:20:02).
+• Agradecimento e Compromisso com o Trabalho: Alencar Silva expressou gratidão pela parceria, valorizando a postura profissional de Administración Skala Lançamentos e o foco no médio e longo prazo. Administração Skala Lançamentos reiterou o compromisso de "entrar para rachar" e "comer o sal" com os parceiros, trabalhando duro para garantir o sucesso mútuo (02:28:07).
+
+Próximas etapas sugeridas
+• Alencar Silva irá fazer uma call de vendas com Administração Skala Lançamentos para que Administração Skala Lançamentos possa entender ao vivo o processo.
+• Alencar Silva irá pegar os extratos da Green com as movimentações de 22/02 até o final de fevereiro e dar carga na planilha para visualização.
+• Alencar Silva irá atualizar o rateio da Ana Alonso para inclusão de Administração Skala Lançamentos, verificando as vendas na Hotmart para conferir a participação na coprodução.
+• Alencar Silva irá atualizar o status da Simone Velho como 'convertida' na mentoria, assumindo que o pagamento ocorreu após 22 de fevereiro.
+• Alencar Silva e Administração Skala Lançamentos irão alterar a data de pagamento do salário para o último dia do mês para melhor visão de caixa, o que resultará em dois pagamentos em março.
+• Alencar Silva e Administração Skala Lançamentos irão se encontrar pelo menos uma vez por mês para realizar o encontro de contas e bater as informações financeiras.
+• Administração Skala Lançamentos precisará conversar com o Thiago sobre o modelo de comissionamento para evitar erros com a Renata e a Fran.
+• Alencar Silva dará a folha de pagamento de sócios (pró-labore) para a Administração Skala Lançamentos discutir com o Thiago.
+• Administração Skala Lançamentos e Alencar Silva devem definir quem emitirá qual nota fiscal retroativa e tratar das cláusulas de dissolução, contrato e CNPJ.
+• Alencar Silva vai enviar o link com o memorando de entendimento e a gravação da reunião para Administração Skala Lançamentos.</pre>
+      </div>
+    </section>
+
+    <section class="card" id="bloco-3">
+      <header class="card-head">
+        <h2>Bloco 3 • Compilação objetiva dos principais pontos discutidos</h2>
+        <div class="head-actions">
+          <button class="btn" data-target="content-3">Recolher conteúdo</button>
+        </div>
+      </header>
+      <div class="content" id="content-3">
+        <table>
+          <thead>
+            <tr>
+              <th>Assunto da pauta</th>
+              <th>Ponto de vista Lube</th>
+              <th>Ponto de vista Skala</th>
+              <th>Ação principal</th>
+              <th>Responsável</th>
+              <th>Status</th>
+              <th>Janela da call</th>
+              <th>Data de retorno</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1) Retroativo & Fechamento (Jan/Fev 2026) • Conciliação de despesas e critério de fechamento</td>
+              <td>Fechamento mês a mês por visão de caixa; corte em 28/02/2026.</td>
+              <td>Concorda com fechamento por caixa e encontro de contas entre as partes.</td>
+              <td>Aplicar fechamento por caixa e consolidar encontro de contas A (jan) e B (fev).</td>
+              <td>Todos</td>
+              <td>Discutido - concluído</td>
+              <td><span class="call-window">00:34:17, 00:35:14, 00:37:31</span></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>1) Retroativo & Fechamento (Jan/Fev 2026) • Unificação a partir de março/2026</td>
+              <td>Após o corte, seguir com aporte financeiro com foco em caixa operacional.</td>
+              <td>Concorda com gestão centralizada e com reencontro de contas.</td>
+              <td>Atualizar extratos Green/Hotmart/Itaú e consolidar hub de informação para março.</td>
+              <td>Todos</td>
+              <td>Discutido - gerou ação</td>
+              <td><span class="call-window">00:07:35, 00:10:58, 00:17:48</span></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>2) Gestão de Pessoas & Pagamentos • Logística de salários</td>
+              <td>Concorda em migrar pagamento para o último dia do mês para leitura de caixa no próprio mês.</td>
+              <td>Concorda com mudança e com efeito de duas saídas em março.</td>
+              <td>Alterar pagamento do 5º dia útil para o último dia do mês.</td>
+              <td>Todos</td>
+              <td>Discutido - gerou ação</td>
+              <td><span class="call-window">00:46:03, 00:48:57</span></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>2) Gestão de Pessoas & Pagamentos • Aporte operacional e ajustes de base (inclui Ana Alonso)</td>
+              <td>Reconhece ajuste de flag e necessidade de atualizar base para encontro de contas.</td>
+              <td>Pede conferência da coprodução da venda de Ana Alonso.</td>
+              <td>Verificar extratos atualizados e ajustar rateio/coprodução da Ana Alonso.</td>
+              <td>Todos</td>
+              <td>Discutido - gerou ação</td>
+              <td><span class="call-window">00:31:52, 00:50:57, 00:55:40</span></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>3) Modelo de Comissionamento • Fran e Renata</td>
+              <td>Defende comissão sobre valor líquido e revisão da regra da Renata; pede modelo com lastro de cálculo.</td>
+              <td>Defende metas claras e revisão do modelo com Thiago.</td>
+              <td>Revisar regra de remuneração variável para Fran e Renata.</td>
+              <td>Todos</td>
+              <td>Discutido - em aberto</td>
+              <td><span class="call-window">00:58:52 até 01:06:02</span></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>3) Modelo de Comissionamento • Metas e gamificação associadas ao comercial</td>
+              <td>Concorda com metas, com ressalva sobre robustez e cadência da operação.</td>
+              <td>Propõe metas de 6 Gold, 4 Diamond e 20 Silver/mês, com gamificação.</td>
+              <td>Definir metas e critérios objetivos antes de comunicar colaboradoras.</td>
+              <td>Todos</td>
+              <td>Discutido - em aberto</td>
+              <td><span class="call-window">01:06:02 até 01:10:57</span></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>4) Folha de Pagamento Sócios (Pró-labore)</td>
+              <td>Pede alinhamento em ponto comum e revisão futura conforme maturidade do caixa.</td>
+              <td>Propõe formato inicial igualitário e conservador.</td>
+              <td>Consolidar formato final de pró-labore e custo fixo total.</td>
+              <td>Todos</td>
+              <td>Discutido - em aberto</td>
+              <td><span class="call-window">01:52:37 até 01:58:42</span></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>5) Blindagem e Royalties (ENA ↔ VM Arquitetos)</td>
+              <td>Propõe compensação ao VM (10% do lucro líquido ou mínimo de R$ 6.000/mês) e traz preocupação com sobrecarga da Vivi.</td>
+              <td>Considera cláusula de 10% inviável no momento; defende regra por origem do ativo/audiência.</td>
+              <td>Levar ponto para nova deliberação contratual.</td>
+              <td>Todos</td>
+              <td>Discutido - em aberto</td>
+              <td><span class="call-window">02:02:16 até 02:14:06</span></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>6) Jurídico e Estrutura Societária • CNPJ e Contrato</td>
+              <td>Defende transparência e clareza contratual desde a origem.</td>
+              <td>Sem deliberação registrada na reunião para este item específico.</td>
+              <td>Iniciar levantamento de dados para novo contrato.</td>
+              <td>Todos</td>
+              <td>Não discutido</td>
+              <td><span class="call-window">sem janela específica</span></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>6) Jurídico e Estrutura Societária • Cláusula de Dissolução</td>
+              <td>Sem deliberação registrada na reunião para este item específico.</td>
+              <td>Sem deliberação registrada na reunião para este item específico.</td>
+              <td>Validar permanência da marca com a Vivi em caso de saída de sócios.</td>
+              <td>Todos</td>
+              <td>Não discutido</td>
+              <td><span class="call-window">sem janela específica</span></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>6) Jurídico e Estrutura Societária • Memorando de Entendimentos (MoU)</td>
+              <td>Cita sequência de discussão sobre CNPJ/contrato e MoU como próximo passo.</td>
+              <td>Concorda em seguir com definições legais/financeiras.</td>
+              <td>Adaptar minuta do antigo escritório de SP para MoU.</td>
+              <td>Todos</td>
+              <td>Discutido - gerou ação</td>
+              <td><span class="call-window">02:20:02</span></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>7) Compliance e Documentação • Notas Fiscais retroativas</td>
+              <td>Aponta emissão de notas retroativas como próximo passo para fechar jan/fev.</td>
+              <td>Concorda em dar sequência.</td>
+              <td>Definir quem emitirá cada nota fiscal retroativa.</td>
+              <td>Todos</td>
+              <td>Discutido - gerou ação</td>
+              <td><span class="call-window">02:20:02</span></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>7) Compliance e Documentação • Contratos com clientes ativos</td>
+              <td>Inclui revisão de contratos com clientes nos próximos passos.</td>
+              <td>Concorda em seguir com revisão e envio de minutas.</td>
+              <td>Revisar e enviar minutas contratuais para clientes já ativas.</td>
+              <td>Todos</td>
+              <td>Discutido - gerou ação</td>
+              <td><span class="call-window">02:20:02</span></td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+        <p class="muted" style="margin:12px 0 0;">Observação: campos de data de retorno foram mantidos em branco quando não há data explícita nos materiais-base.</p>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const buttons = document.querySelectorAll('.btn[data-target]');
+
+    buttons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const id = btn.getAttribute('data-target');
+        const el = document.getElementById(id);
+        if (!el) return;
+
+        const hidden = el.style.display === 'none';
+        el.style.display = hidden ? '' : 'none';
+        btn.textContent = hidden ? 'Recolher conteúdo' : 'Expandir conteúdo';
+      });
+    });
+  </script>
+</body>
+</html>
