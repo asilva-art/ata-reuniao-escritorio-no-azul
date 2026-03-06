@@ -97,7 +97,6 @@
     const out = document.getElementById('saida');
     const publishBtn = document.getElementById('publicar');
     const statusEl = document.getElementById('status-publicacao');
-    const REPO = 'asilva-art/ata-reuniao-escritorio-no-azul';
 
     const buildPayload = () => {
       const numero = document.getElementById('ata-numero').value.trim() || '000';
@@ -174,15 +173,14 @@
         const catalogEntry = await waitForCatalogEntry(payload);
         if (!catalogEntry) {
           const fallbackAtaUrl = `https://asilva-art.github.io/ata-reuniao-escritorio-no-azul/profissional/entregas/${payload.slug}/`;
-          const fallbackEditUrl = `https://github.com/${REPO}/edit/main/profissional/entregas/${payload.slug}/index.html`;
-          statusEl.innerHTML = `Solicitação enviada. A ata ainda está processando. Tente em instantes: <a href="${fallbackAtaUrl}" target="_blank" rel="noopener noreferrer">Ver ata</a> ou <a href="${fallbackEditUrl}" target="_blank" rel="noopener noreferrer">Editar conteúdo</a>.`;
+          const fallbackEditUrl = `./editar-ata.html?slug=${encodeURIComponent(payload.slug)}`;
+          statusEl.innerHTML = `Solicitação enviada. A ata ainda está processando. Tente em instantes: <a href="${fallbackAtaUrl}" target="_blank" rel="noopener noreferrer">Ver ata</a> ou <a href="${fallbackEditUrl}">Editar ata</a>.`;
           return;
         }
 
         const ataUrl = `https://asilva-art.github.io/ata-reuniao-escritorio-no-azul${catalogEntry.link_final}`;
-        const path = catalogEntry.link_final.replace(/^\//, '');
-        const editUrl = `https://github.com/${REPO}/edit/main/${path}index.html`;
-        statusEl.innerHTML = `Ata criada com sucesso. Clique em <a href="${ataUrl}" target="_blank" rel="noopener noreferrer">Ver ata</a> para visualizar e em <a href="${editUrl}" target="_blank" rel="noopener noreferrer">Editar conteúdo</a> para ajustar o texto.`;
+        const editUrl = `./editar-ata.html?slug=${encodeURIComponent(catalogEntry.slug || payload.slug)}`;
+        statusEl.innerHTML = `Ata criada com sucesso. Clique em <a href="${ataUrl}" target="_blank" rel="noopener noreferrer">Ver ata</a> para visualizar e em <a href="${editUrl}">Editar ata</a> para ajustar o texto.`;
       } catch (e) {
         statusEl.textContent = `Falha ao publicar automaticamente: ${e.message}. Se o endpoint ainda não estiver publicado, me avise para concluir o deploy serverless.`;
       }

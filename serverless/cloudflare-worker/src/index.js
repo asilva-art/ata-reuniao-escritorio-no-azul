@@ -20,43 +20,49 @@ export default {
       return new Response(null, { status: 204, headers: corsHeaders });
     }
 
-    if (url.pathname !== '/api/nova-ata' || request.method !== 'POST') {
+    if (request.method !== 'POST') {
       return json({ ok: false, error: 'Not found' }, 404, corsHeaders);
     }
 
     try {
       const body = await request.json();
-      const payload = validatePayload(body);
+      if (url.pathname === '/api/nova-ata') {
+        const payload = validatePayloadNewAta(body);
+        const issueTitle = `[NOVA ATA] Ata ${String(payload.numero).padStart(3, '0')} • ${payload.titulo}`;
+        const issueBody = buildIssueBodyNewAta(payload);
 
-      const issueTitle = `[NOVA ATA] Ata ${String(payload.numero).padStart(3, '0')} • ${payload.titulo}`;
-      const issueBody = buildIssueBody(payload);
+        const ghRes = await createIssue(env, issueTitle, issueBody, ['nova-ata']);
+        if (!ghRes.ok) {
+          return json({ ok: false, error: ghRes.error || 'Falha ao criar issue no GitHub.' }, 400, corsHeaders);
+        }
 
-      const ghRes = await fetch(`https://api.github.com/repos/${env.GITHUB_OWNER}/${env.GITHUB_REPO}/issues`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `token ${env.GITHUB_TOKEN}`,
-          'Accept': 'application/vnd.github+json',
-          'Content-Type': 'application/json',
-          'User-Agent': 'ata-hub-worker'
-        },
-        body: JSON.stringify({
-          title: issueTitle,
-          body: issueBody,
-          labels: ['nova-ata']
-        })
-      });
-
-      const ghJson = await ghRes.json();
-      if (!ghRes.ok) {
-        return json({ ok: false, error: ghJson.message || 'Falha ao criar issue no GitHub.' }, 400, corsHeaders);
+        return json({
+          ok: true,
+          issue_url: ghRes.issue_url,
+          issue_number: ghRes.issue_number,
+          message: 'Issue criada. Workflow de publicação foi acionado.'
+        }, 200, corsHeaders);
       }
 
-      return json({
-        ok: true,
-        issue_url: ghJson.html_url,
-        issue_number: ghJson.number,
-        message: 'Issue criada. Workflow de publicação foi acionado.'
-      }, 200, corsHeaders);
+      if (url.pathname === '/api/atualizar-ata') {
+        const payload = validatePayloadUpdateAta(body);
+        const issueTitle = `[ATUALIZAR ATA] ${payload.slug}`;
+        const issueBody = buildIssueBodyUpdateAta(payload);
+
+        const ghRes = await createIssue(env, issueTitle, issueBody, ['atualizar-ata']);
+        if (!ghRes.ok) {
+          return json({ ok: false, error: ghRes.error || 'Falha ao criar issue no GitHub.' }, 400, corsHeaders);
+        }
+
+        return json({
+          ok: true,
+          issue_url: ghRes.issue_url,
+          issue_number: ghRes.issue_number,
+          message: 'Issue de atualização criada. Workflow foi acionado.'
+        }, 200, corsHeaders);
+      }
+
+      return json({ ok: false, error: 'Not found' }, 404, corsHeaders);
     } catch (err) {
       return json({ ok: false, error: err.message || 'Erro interno.' }, 500, corsHeaders);
     }
@@ -73,7 +79,27 @@ function json(obj, status, headers = {}) {
   });
 }
 
-function validatePayload(input) {
+async function createIssue(env, title, body, labels) {
+  const ghRes = await fetch(`https://api.github.com/repos/${env.GITHUB_OWNER}/${env.GITHUB_REPO}/issues`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `token ${env.GITHUB_TOKEN}`,
+      'Accept': 'application/vnd.github+json',
+      'Content-Type': 'application/json',
+      'User-Agent': 'ata-hub-worker'
+    },
+    body: JSON.stringify({ title, body, labels })
+  });
+
+  const ghJson = await ghRes.json().catch(() => ({}));
+  if (!ghRes.ok) {
+    return { ok: false, error: ghJson.message || 'Falha ao criar issue no GitHub.' };
+  }
+
+  return { ok: true, issue_url: ghJson.html_url, issue_number: ghJson.number };
+}
+
+function validatePayloadNewAta(input) {
   const required = ['numero', 'data', 'titulo', 'participantes', 'prioridade', 'status_inicial'];
   const data = {};
 
@@ -98,7 +124,18 @@ function validatePayload(input) {
   };
 }
 
-function buildIssueBody(payload) {
+function validatePayloadUpdateAta(input) {
+  const slug = String(input?.slug ?? '').trim().toLowerCase();
+  const html = String(input?.html ?? '').trim();
+  const titulo = String(input?.titulo ?? '').trim();
+  if (!slug) throw new Error('Campo obrigatório ausente: slug');
+  if (!/^[a-z0-9][a-z0-9-]*$/.test(slug)) throw new Error('slug inválido.');
+  if (!html) throw new Error('Campo obrigatório ausente: html');
+  if (html.length > 250000) throw new Error('Conteúdo HTML excede o tamanho permitido.');
+  return { slug, html, titulo };
+}
+
+function buildIssueBodyNewAta(payload) {
   return [
     'Solicitação automática de nova ata.',
     '',
@@ -107,5 +144,17 @@ function buildIssueBody(payload) {
     JSON.stringify(payload, null, 2),
     '```',
     '<!-- ATA_PAYLOAD_END -->'
+  ].join('\n');
+}
+
+function buildIssueBodyUpdateAta(payload) {
+  return [
+    'Solicitação automática de atualização de ata.',
+    '',
+    '<!-- ATA_UPDATE_PAYLOAD_START -->',
+    '```json',
+    JSON.stringify(payload, null, 2),
+    '```',
+    '<!-- ATA_UPDATE_PAYLOAD_END -->'
   ].join('\n');
 }

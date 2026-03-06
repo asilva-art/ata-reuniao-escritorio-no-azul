@@ -90,7 +90,6 @@
   <script>
     const listEl = document.getElementById('ata-list');
     const loadingEl = document.getElementById('loading');
-    const REPO = 'asilva-art/ata-reuniao-escritorio-no-azul';
 
     const toAbsoluteLink = (path) => {
       if (!path) return '#';
@@ -105,8 +104,7 @@
 
       listEl.innerHTML = items.map((it, idx) => {
         const link = toAbsoluteLink(it.link_final);
-        const path = String(it.link_final || '').replace(/^\//, '');
-        const editUrl = `https://github.com/${REPO}/edit/main/${path}index.html`;
+        const editUrl = `./editar-ata.html?slug=${encodeURIComponent(it.slug || '')}`;
         const status = (it.status || (it.publicado === false ? 'rascunho' : 'publicada')).toLowerCase();
         return `
           <article class="item">
@@ -114,7 +112,7 @@
               <h3 class="item-title">${it.titulo}</h3>
               <div style="display:flex; gap:8px; flex-wrap:wrap;">
                 <a class="btn" href="${link}">Abrir ata</a>
-                <a class="btn" href="${editUrl}" target="_blank" rel="noopener noreferrer">Editar conteúdo</a>
+                <a class="btn" href="${editUrl}">Editar ata</a>
               </div>
             </div>
             <div class="meta">

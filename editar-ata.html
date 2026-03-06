@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Editar Ata | Hub de Atas</title>
+  <style>
+    :root { --bg:#f7f7f5; --card:#fff; --text:#1f2328; --line:#e7e8ea; --muted:#5f6b7a; --accent:#0f766e; --accent-soft:#ecfdf5; --shadow:0 12px 30px rgba(0,0,0,.06); --radius:14px; }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family:"Avenir Next","Segoe UI",sans-serif; background:var(--bg); color:var(--text); }
+    main { width:min(1060px,92vw); margin:28px auto 50px; }
+    .card { background:var(--card); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); padding:16px; margin-bottom:14px; }
+    h1 { margin:0 0 8px; font-size:1.35rem; }
+    h2 { margin:0 0 8px; font-size:1.04rem; }
+    p { margin:0 0 10px; color:var(--muted); }
+    label { display:block; font-size:.82rem; color:#5f6b7a; margin-bottom:4px; }
+    input, select, textarea { width:100%; border:1px solid #cfd8dc; border-radius:8px; padding:8px 9px; font:0.9rem/1.4 "Avenir Next","Segoe UI",sans-serif; }
+    textarea { min-height:140px; resize:vertical; }
+    .grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+    .btn { border:1px solid #c8d6d5; background:#fff; color:#134e4a; border-radius:999px; font-size:.84rem; padding:8px 12px; cursor:pointer; text-decoration:none; display:inline-block; }
+    .btn:hover { background:var(--accent-soft); }
+    .btn.danger { border-color:#e6b8b8; color:#8b2323; }
+    .actions { display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; }
+    .rows { display:grid; gap:10px; }
+    .row { border:1px solid var(--line); border-radius:10px; padding:10px; background:#fcfcfc; }
+    .row-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
+    .status { margin-top:10px; font-size:.9rem; color:#345; }
+    @media (max-width:800px) { .grid { grid-template-columns:1fr; } }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="card">
+      <h1>Editar ata</h1>
+      <p>Edite sem abrir código HTML. Salve pelo botão <strong>Salvar automaticamente</strong>.</p>
+      <div class="actions">
+        <a class="btn" href="./index.html">Voltar ao Hub</a>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="grid">
+        <div>
+          <label>Selecionar ata</label>
+          <select id="ata-select"></select>
+        </div>
+        <div>
+          <label>Título da ata</label>
+          <input id="ata-title" readonly />
+        </div>
+      </div>
+      <div class="actions">
+        <button class="btn" id="reload" type="button">Recarregar conteúdo atual</button>
+      </div>
+      <p id="editor-status" class="status"></p>
+    </section>
+
+    <section class="card">
+      <h2>Bloco 1 • Pauta da reunião (base)</h2>
+      <textarea id="bloco1"></textarea>
+    </section>
+
+    <section class="card">
+      <h2>Bloco 2 • Registro da call</h2>
+      <textarea id="bloco2"></textarea>
+    </section>
+
+    <section class="card">
+      <h2>Bloco 3 • Compilação (linhas da tabela)</h2>
+      <div class="actions">
+        <button class="btn" id="add-row" type="button">Adicionar linha</button>
+      </div>
+      <div id="rows" class="rows"></div>
+      <div class="actions">
+        <button class="btn" id="save" type="button">Salvar automaticamente</button>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const API_BASE = window.ATA_API_BASE || 'https://ata-hub-publisher.asilva-e21.workers.dev';
+    const statusEl = document.getElementById('editor-status');
+    const selectEl = document.getElementById('ata-select');
+    const titleEl = document.getElementById('ata-title');
+    const bloco1El = document.getElementById('bloco1');
+    const bloco2El = document.getElementById('bloco2');
+    const rowsEl = document.getElementById('rows');
+    const COLS = [
+      'Assunto da pauta',
+      'Ponto de vista Lube',
+      'Ponto de vista Skala',
+      'Ação principal',
+      'Responsável',
+      'Status',
+      'Janela da call',
+      'Data de retorno'
+    ];
+    let catalog = [];
+    let activeEntry = null;
+    let activeDoc = null;
+
+    const qp = new URLSearchParams(window.location.search);
+    const requestedSlug = qp.get('slug') || '';
+
+    const escapeHtml = (value) => String(value ?? '')
+      .replaceAll('&', '&amp;')
+      .replaceAll('<', '&lt;')
+      .replaceAll('>', '&gt;')
+      .replaceAll('"', '&quot;')
+      .replaceAll("'", '&#39;');
+
+    const setStatus = (msg) => { statusEl.textContent = msg; };
+
+    const renderRows = (rows) => {
+      rowsEl.innerHTML = rows.map((cells, idx) => `
+        <article class="row" data-idx="${idx}">
+          <div class="row-head">
+            <strong>Linha ${idx + 1}</strong>
+            <button class="btn danger remove-row" type="button" data-idx="${idx}">Excluir linha</button>
+          </div>
+          <div class="grid">
+            ${COLS.map((label, cidx) => `
+              <div>
+                <label>${label}</label>
+                <input data-col="${cidx}" value="${escapeHtml(cells[cidx] || '')}" />
+              </div>
+            `).join('')}
+          </div>
+        </article>
+      `).join('');
+
+      rowsEl.querySelectorAll('.remove-row').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          btn.closest('.row')?.remove();
+          normalizeRowIndexes();
+        });
+      });
+    };
+
+    const normalizeRowIndexes = () => {
+      const rows = rowsEl.querySelectorAll('.row');
+      rows.forEach((row, idx) => {
+        row.setAttribute('data-idx', String(idx));
+        const head = row.querySelector('.row-head strong');
+        if (head) head.textContent = `Linha ${idx + 1}`;
+        const btn = row.querySelector('.remove-row');
+        if (btn) btn.setAttribute('data-idx', String(idx));
+      });
+    };
+
+    const readRowsFromForm = () => {
+      const result = [];
+      rowsEl.querySelectorAll('.row').forEach((row) => {
+        const cells = [];
+        for (let i = 0; i < COLS.length; i += 1) {
+          const inp = row.querySelector(`input[data-col="${i}"]`);
+          cells.push((inp?.value || '').trim());
+        }
+        result.push(cells);
+      });
+      return result;
+    };
+
+    const parseRowsFromDoc = (doc) => {
+      const rows = [];
+      doc.querySelectorAll('#bloco-3 tbody tr').forEach((tr) => {
+        const cells = Array.from(tr.querySelectorAll('td')).map((td) => td.textContent || '');
+        while (cells.length < COLS.length) cells.push('');
+        rows.push(cells.slice(0, COLS.length));
+      });
+      if (!rows.length) rows.push(['', '', '', '', 'Todos', 'Não discutido', '', '']);
+      return rows;
+    };
+
+    const loadAtaHtml = async (entry) => {
+      const url = `.${entry.link_final}index.html`;
+      const res = await fetch(url, { cache: 'no-store' });
+      if (!res.ok) throw new Error('Falha ao carregar a ata para edição.');
+      const html = await res.text();
+      const doc = new DOMParser().parseFromString(html, 'text/html');
+      activeDoc = doc;
+      activeEntry = entry;
+
+      const b1 = doc.querySelector('#content-1 pre');
+      const b2 = doc.querySelector('#content-2 pre');
+      bloco1El.value = b1 ? b1.textContent : '';
+      bloco2El.value = b2 ? b2.textContent : '';
+      renderRows(parseRowsFromDoc(doc));
+      titleEl.value = entry.titulo || '';
+      setStatus(`Conteúdo carregado: ${entry.titulo}`);
+    };
+
+    const buildUpdatedHtml = () => {
+      if (!activeDoc) throw new Error('Ata não carregada.');
+      const doc = activeDoc;
+
+      const b1 = doc.querySelector('#content-1 pre');
+      const b2 = doc.querySelector('#content-2 pre');
+      if (b1) b1.textContent = bloco1El.value;
+      if (b2) b2.textContent = bloco2El.value;
+
+      const tbody = doc.querySelector('#bloco-3 tbody');
+      if (!tbody) throw new Error('Tabela do bloco 3 não encontrada.');
+      tbody.innerHTML = '';
+      const rows = readRowsFromForm();
+      rows.forEach((cells) => {
+        const tr = doc.createElement('tr');
+        cells.forEach((txt) => {
+          const td = doc.createElement('td');
+          td.textContent = txt;
+          tr.appendChild(td);
+        });
+        tbody.appendChild(tr);
+      });
+
+      return '<!doctype html>\n' + doc.documentElement.outerHTML;
+    };
+
+    const saveAutomatically = async () => {
+      if (!activeEntry) return;
+      setStatus('Publicando atualização...');
+      try {
+        const html = buildUpdatedHtml();
+        const res = await fetch(`${API_BASE}/api/atualizar-ata`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            slug: activeEntry.slug,
+            titulo: activeEntry.titulo,
+            html
+          })
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok || !data.ok) throw new Error(data.error || `Erro HTTP ${res.status}`);
+        const viewUrl = `https://asilva-art.github.io/ata-reuniao-escritorio-no-azul${activeEntry.link_final}`;
+        setStatus(`Atualização enviada com sucesso. Aguarde alguns segundos e atualize: ${viewUrl}`);
+      } catch (err) {
+        setStatus(`Falha ao salvar automaticamente: ${err.message}`);
+      }
+    };
+
+    const loadCatalog = async () => {
+      const res = await fetch('./catalogo.json', { cache: 'no-store' });
+      if (!res.ok) throw new Error('Falha ao carregar catálogo.');
+      const items = await res.json();
+      catalog = Array.isArray(items) ? items : [];
+      if (!catalog.length) throw new Error('Sem atas cadastradas.');
+      selectEl.innerHTML = catalog.map((it) => `<option value="${escapeHtml(it.slug)}">${escapeHtml(it.titulo)}</option>`).join('');
+      const first = catalog.find((it) => it.slug === requestedSlug) || catalog[0];
+      selectEl.value = first.slug;
+      await loadAtaHtml(first);
+    };
+
+    document.getElementById('reload').addEventListener('click', async () => {
+      const entry = catalog.find((it) => it.slug === selectEl.value);
+      if (!entry) return;
+      await loadAtaHtml(entry);
+    });
+
+    document.getElementById('add-row').addEventListener('click', () => {
+      const rows = readRowsFromForm();
+      rows.push(['', '', '', '', 'Todos', 'Não discutido', '', '']);
+      renderRows(rows);
+    });
+
+    document.getElementById('save').addEventListener('click', saveAutomatically);
+
+    selectEl.addEventListener('change', async () => {
+      const entry = catalog.find((it) => it.slug === selectEl.value);
+      if (!entry) return;
+      await loadAtaHtml(entry);
+    });
+
+    loadCatalog().catch((err) => {
+      setStatus(`Erro ao iniciar editor: ${err.message}`);
+    });
+  </script>
+</body>
+</html>
