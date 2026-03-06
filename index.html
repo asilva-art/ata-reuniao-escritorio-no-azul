@@ -90,6 +90,7 @@
   <script>
     const listEl = document.getElementById('ata-list');
     const loadingEl = document.getElementById('loading');
+    const REPO = 'asilva-art/ata-reuniao-escritorio-no-azul';
 
     const toAbsoluteLink = (path) => {
       if (!path) return '#';
@@ -104,17 +105,24 @@
 
       listEl.innerHTML = items.map((it, idx) => {
         const link = toAbsoluteLink(it.link_final);
+        const path = String(it.link_final || '').replace(/^\//, '');
+        const editUrl = `https://github.com/${REPO}/edit/main/${path}index.html`;
+        const status = (it.status || (it.publicado === false ? 'rascunho' : 'publicada')).toLowerCase();
         return `
           <article class="item">
             <div class="item-head">
               <h3 class="item-title">${it.titulo}</h3>
-              <a class="btn" href="${link}">Abrir ata</a>
+              <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                <a class="btn" href="${link}">Abrir ata</a>
+                <a class="btn" href="${editUrl}" target="_blank" rel="noopener noreferrer">Editar conteúdo</a>
+              </div>
             </div>
             <div class="meta">
               <span>Categoria: ${it.categoria}</span>
               <span>Tipo: ${it.tipo}</span>
               <span>Data: ${it.data}</span>
               <span>Prioridade: ${it.prioridade}</span>
+              <span>Status: ${status}</span>
               <span>Slug: ${it.slug}</span>
             </div>
           </article>
@@ -129,8 +137,7 @@
       })
       .then((items) => {
         const all = Array.isArray(items) ? items : [];
-        const published = all.filter((it) => it.publicado !== false);
-        renderItems(published);
+        renderItems(all);
         loadingEl.textContent = '';
       })
       .catch(() => {

@@ -102,7 +102,7 @@ def build_catalog_html(entries: list[dict]) -> str:
     <section class=\"card\">
       <h1>Catalogo de Atas</h1>
       <p style=\"margin:0 0 12px; color:#5f6b7a;\"><a href=\"./index.html\">Voltar ao Hub de Atas</a></p>
-      <p style=\"margin:0 0 12px; color:#5f6b7a;\">Atas com status <strong>rascunho</strong> nao aparecem no Hub principal.</p>
+      <p style=\"margin:0 0 12px; color:#5f6b7a;\">Atas publicadas e rascunhos aparecem no Hub principal.</p>
       <table>
         <thead>
           <tr>
