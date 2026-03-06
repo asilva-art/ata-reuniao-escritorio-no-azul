@@ -28,10 +28,25 @@
   <main>
     <section class="card">
       <h1>Nova ata (automático)</h1>
-      <p>Preencha os dados e clique em <strong>Publicar automaticamente</strong>. Isso abre um issue no GitHub com o payload; ao enviar o issue, a ata é criada e publicada sozinha pelo workflow.</p>
-      <p class="hint">Fluxo: página -> issue com label `nova-ata` -> GitHub Action cria/atualiza ata + catálogo.</p>
+      <p>Preencha os dados e clique em <strong>Publicar automaticamente</strong>. A página envia direto para a API do GitHub e dispara o workflow sem te jogar para outra tela.</p>
+      <p class="hint">Fluxo: página -> API GitHub (issue com label `nova-ata`) -> GitHub Action cria/atualiza ata + catálogo.</p>
       <div class="actions">
         <a class="btn" href="./index.html">Voltar ao Hub</a>
+      </div>
+    </section>
+
+    <section class="card">
+      <p><strong>Conexão GitHub (1x por navegador)</strong></p>
+      <div class="grid">
+        <div style="grid-column:1/-1;">
+          <label>Token GitHub (escopos: repo + workflow)</label>
+          <input id="gh-token" type="password" placeholder="ghp_xxx..." />
+          <p class="hint" style="margin-top:6px;">O token fica salvo apenas no seu navegador para evitar redirecionamento manual.</p>
+        </div>
+      </div>
+      <div class="actions">
+        <button class="btn" id="salvar-token" type="button">Salvar token</button>
+        <button class="btn" id="limpar-token" type="button">Remover token</button>
       </div>
     </section>
 
@@ -72,8 +87,9 @@
       <div class="actions">
         <button class="btn" id="gerar" type="button">Gerar pacote</button>
         <button class="btn" id="copiar" type="button">Copiar resumo</button>
-        <a class="btn" id="publicar" target="_blank" rel="noopener noreferrer" href="#">Publicar automaticamente</a>
+        <button class="btn" id="publicar" type="button">Publicar automaticamente</button>
       </div>
+      <p id="status-publicacao" class="hint" style="margin-top:10px;"></p>
     </section>
 
     <section class="card">
@@ -93,8 +109,11 @@
       .replace(/^-+|-+$/g, '')
       .slice(0, 80);
 
+    const TOKEN_KEY = 'ena_github_token_v1';
     const out = document.getElementById('saida');
     const publishBtn = document.getElementById('publicar');
+    const statusEl = document.getElementById('status-publicacao');
+    const tokenInput = document.getElementById('gh-token');
 
     const buildPayload = () => {
       const numero = document.getElementById('ata-numero').value.trim() || '000';
@@ -109,9 +128,8 @@
       return { numero, data, titulo, participantes, prioridade, status_inicial, slug, caminho };
     };
 
-    const buildIssueUrl = (payload) => {
-      const title = `[NOVA ATA] Ata ${String(payload.numero).padStart(3, '0')} • ${payload.titulo}`;
-      const issueBody = [
+    const buildIssueBody = (payload) => {
+      return [
         'Solicitação automática de nova ata.',
         '',
         '<!-- ATA_PAYLOAD_START -->',
@@ -127,6 +145,11 @@
         '```',
         '<!-- ATA_PAYLOAD_END -->'
       ].join('\n');
+    };
+
+    const buildIssueUrl = (payload) => {
+      const title = `[NOVA ATA] Ata ${String(payload.numero).padStart(3, '0')} • ${payload.titulo}`;
+      const issueBody = buildIssueBody(payload);
 
       const q = new URLSearchParams({
         labels: 'nova-ata',
@@ -152,12 +175,11 @@
         '',
         'Ação automática:',
         '1) clicar em "Publicar automaticamente"',
-        '2) enviar o issue no GitHub',
+        '2) a página envia para a API do GitHub',
         '3) workflow cria a ata e atualiza o catálogo'
       ].join('\n');
 
       out.textContent = resumo;
-      publishBtn.href = buildIssueUrl(payload);
       return resumo;
     };
 
@@ -173,11 +195,73 @@
       }
     });
 
+    const saveToken = () => {
+      const t = tokenInput.value.trim();
+      if (!t) {
+        statusEl.textContent = 'Informe um token válido.';
+        return;
+      }
+      localStorage.setItem(TOKEN_KEY, t);
+      statusEl.textContent = 'Token salvo neste navegador.';
+    };
+
+    const clearToken = () => {
+      localStorage.removeItem(TOKEN_KEY);
+      tokenInput.value = '';
+      statusEl.textContent = 'Token removido deste navegador.';
+    };
+
+    document.getElementById('salvar-token').addEventListener('click', saveToken);
+    document.getElementById('limpar-token').addEventListener('click', clearToken);
+
+    const publishAutomatic = async () => {
+      const payload = buildPayload();
+      const token = localStorage.getItem(TOKEN_KEY) || tokenInput.value.trim();
+      if (!token) {
+        statusEl.textContent = 'Salve o token GitHub antes de publicar.';
+        return;
+      }
+
+      statusEl.textContent = 'Publicando...';
+      const title = `[NOVA ATA] Ata ${String(payload.numero).padStart(3, '0')} • ${payload.titulo}`;
+      const body = buildIssueBody(payload);
+
+      try {
+        const res = await fetch(`https://api.github.com/repos/${REPO}/issues`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `token ${token}`,
+            'Accept': 'application/vnd.github+json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            title,
+            body,
+            labels: ['nova-ata']
+          })
+        });
+
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({}));
+          throw new Error(err.message || `Erro HTTP ${res.status}`);
+        }
+
+        const data = await res.json();
+        statusEl.innerHTML = `Issue criado com sucesso: <a href="${data.html_url}" target="_blank" rel="noopener noreferrer">${data.html_url}</a>. O workflow vai processar e fechar automaticamente.`;
+      } catch (e) {
+        statusEl.textContent = `Falha ao publicar automaticamente: ${e.message}.`;
+      }
+    };
+
+    publishBtn.addEventListener('click', publishAutomatic);
+
     ['ata-numero', 'ata-data', 'ata-titulo', 'ata-prioridade', 'ata-status-inicial', 'ata-participantes'].forEach((id) => {
       document.getElementById(id).addEventListener('input', render);
       document.getElementById(id).addEventListener('change', render);
     });
 
+    const savedToken = localStorage.getItem(TOKEN_KEY);
+    if (savedToken) tokenInput.value = savedToken;
     render();
   </script>
 </body>
