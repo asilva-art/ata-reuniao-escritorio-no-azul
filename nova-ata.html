@@ -168,7 +168,9 @@
 
         const data = await res.json().catch(() => ({}));
         if (!res.ok || !data.ok) throw new Error(data.error || `Erro HTTP ${res.status}`);
-        statusEl.innerHTML = `Solicitação enviada com sucesso. Issue: <a href="${data.issue_url}" target="_blank" rel="noopener noreferrer">${data.issue_url}</a>.`;
+        const ataUrl = `https://asilva-art.github.io/ata-reuniao-escritorio-no-azul/profissional/entregas/${payload.slug}/`;
+        const editUrl = `https://github.com/asilva-art/ata-reuniao-escritorio-no-azul/edit/main/profissional/entregas/${payload.slug}/index.html`;
+        statusEl.innerHTML = `Ata criada com sucesso. Clique em <a href="${ataUrl}" target="_blank" rel="noopener noreferrer">Ver ata</a> para visualizar e em <a href="${editUrl}" target="_blank" rel="noopener noreferrer">Editar conteúdo</a> para ajustar o texto.`;
       } catch (e) {
         statusEl.textContent = `Falha ao publicar automaticamente: ${e.message}. Se o endpoint ainda não estiver publicado, me avise para concluir o deploy serverless.`;
       }
