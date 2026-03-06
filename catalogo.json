@@ -1,6 +1,15 @@
 [
   {
-    "titulo": "Pauta de Reunião: Reunião de Pendências - 001",
+    "titulo": "Ata 002 • Reunião de Pendências",
+    "categoria": "profissional/entregas",
+    "slug": "ata-002-reuniao-de-pendencias",
+    "tipo": "profissional",
+    "data": "2026-03-06",
+    "link_final": "/profissional/entregas/ata-002-reuniao-de-pendencias/",
+    "prioridade": "média"
+  },
+  {
+    "titulo": "Ata 001 • Reunião de Pendências",
     "categoria": "profissional/entregas",
     "slug": "ata-reuniao-escritorio-no-azul",
     "tipo": "profissional",
