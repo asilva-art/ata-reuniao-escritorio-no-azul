@@ -8,7 +8,9 @@
     "link_final": "/profissional/entregas/ata-002-reuniao-de-pendencias/",
     "prioridade": "média",
     "status": "rascunho",
-    "publicado": false
+    "publicado": false,
+    "fonte_criacao": "workflow_auto",
+    "atualizado_em": "2026-03-06"
   },
   {
     "titulo": "Ata 001 • Reunião de Pendências",

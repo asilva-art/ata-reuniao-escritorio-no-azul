@@ -1,0 +1,90 @@
+name: Publicar Ata (Automatico)
+
+on:
+  issues:
+    types: [opened, edited, labeled]
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  publish:
+    if: contains(github.event.issue.labels.*.name, 'nova-ata')
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Parse payload from issue
+        env:
+          ISSUE_BODY: ${{ github.event.issue.body }}
+        run: |
+          python - <<'PY'
+          import os, re, json
+          body = os.environ.get('ISSUE_BODY', '')
+          m = re.search(r'<!-- ATA_PAYLOAD_START -->(.*?)<!-- ATA_PAYLOAD_END -->', body, re.S)
+          if not m:
+              raise SystemExit('Payload nao encontrado no issue body.')
+          block = m.group(1)
+          m2 = re.search(r'```json(.*?)```', block, re.S)
+          txt = m2.group(1).strip() if m2 else block.strip()
+          payload = json.loads(txt)
+          with open('ata_payload.json', 'w', encoding='utf-8') as f:
+              json.dump(payload, f, ensure_ascii=False, indent=2)
+          print('payload_ok')
+          PY
+
+      - name: Create/update ata
+        run: |
+          python scripts/create_ata.py \
+            --payload ata_payload.json \
+            --repo-base-url "https://asilva-art.github.io/ata-reuniao-escritorio-no-azul" > result.json
+          cat result.json
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Publica ata automatica via issue #${{ github.event.issue.number }}"
+            git push
+          fi
+
+      - name: Comment result and close issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const result = JSON.parse(fs.readFileSync('result.json', 'utf8'));
+            const body = [
+              'Ata processada automaticamente com sucesso.',
+              '',
+              `- Slug: \`${result.slug}\``,
+              `- Status: \`${result.status}\``,
+              `- URL da ata: ${result.url}`,
+              `- Catálogo: ${result.catalogo_url}`,
+              '',
+              'Observação: se o status estiver como `rascunho`, a ata não aparece no Hub principal até ser publicada.'
+            ].join('\n');
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body
+            });
+            await github.rest.issues.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              state: 'closed'
+            });

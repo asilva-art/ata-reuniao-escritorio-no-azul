@@ -20,14 +20,16 @@
     .btn:hover{background:#ecfdf5}
     .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
     pre{margin:0;white-space:pre-wrap;word-break:break-word;font:0.86rem/1.48 ui-monospace,Menlo,Consolas,monospace;background:#f8fafb;border:1px solid #e6eaed;border-radius:10px;padding:12px}
+    .hint{font-size:.86rem;color:#5f6b7a}
     @media (max-width:800px){.grid{grid-template-columns:1fr}}
   </style>
 </head>
 <body>
   <main>
     <section class="card">
-      <h1>Nova ata (modelo)</h1>
-      <p>Preencha os dados mínimos e gere o pacote de criação. Quando quiser, me envie o resultado e eu publico no Hub automaticamente.</p>
+      <h1>Nova ata (automático)</h1>
+      <p>Preencha os dados e clique em <strong>Publicar automaticamente</strong>. Isso abre um issue no GitHub com o payload; ao enviar o issue, a ata é criada e publicada sozinha pelo workflow.</p>
+      <p class="hint">Fluxo: página -> issue com label `nova-ata` -> GitHub Action cria/atualiza ata + catálogo.</p>
       <div class="actions">
         <a class="btn" href="./index.html">Voltar ao Hub</a>
       </div>
@@ -55,6 +57,13 @@
             <option>baixa</option>
           </select>
         </div>
+        <div>
+          <label>Status inicial</label>
+          <select id="ata-status-inicial">
+            <option selected>rascunho</option>
+            <option>publicada</option>
+          </select>
+        </div>
         <div style="grid-column:1/-1;">
           <label>Participantes</label>
           <input id="ata-participantes" value="Layene Oliveira (Skala Lançamentos) e Alencar Silva (Lube Digital)" />
@@ -63,6 +72,7 @@
       <div class="actions">
         <button class="btn" id="gerar" type="button">Gerar pacote</button>
         <button class="btn" id="copiar" type="button">Copiar resumo</button>
+        <a class="btn" id="publicar" target="_blank" rel="noopener noreferrer" href="#">Publicar automaticamente</a>
       </div>
     </section>
 
@@ -73,6 +83,8 @@
   </main>
 
   <script>
+    const REPO = 'asilva-art/ata-reuniao-escritorio-no-azul';
+
     const slugify = (txt) => txt
       .toLowerCase()
       .normalize('NFD')
@@ -82,37 +94,77 @@
       .slice(0, 80);
 
     const out = document.getElementById('saida');
+    const publishBtn = document.getElementById('publicar');
 
-    const build = () => {
+    const buildPayload = () => {
       const numero = document.getElementById('ata-numero').value.trim() || '000';
       const data = document.getElementById('ata-data').value.trim() || '2026-01-01';
       const titulo = document.getElementById('ata-titulo').value.trim() || 'Reunião';
       const participantes = document.getElementById('ata-participantes').value.trim();
       const prioridade = document.getElementById('ata-prioridade').value.trim();
-      const slug = `ata-${String(numero).padStart(3,'0')}-${slugify(titulo)}`;
+      const status_inicial = document.getElementById('ata-status-inicial').value.trim();
+      const slug = `ata-${String(numero).padStart(3, '0')}-${slugify(titulo)}`;
       const caminho = `/profissional/entregas/${slug}/index.html`;
 
-      const resumo = [
-        `titulo: Ata ${String(numero).padStart(3,'0')} • ${titulo}`,
-        `data: ${data}`,
-        `participantes: ${participantes}`,
-        `slug: ${slug}`,
-        `caminho_final: ${caminho}`,
-        `categoria: profissional/entregas`,
-        `tipo: profissional`,
-        `prioridade: ${prioridade}`,
+      return { numero, data, titulo, participantes, prioridade, status_inicial, slug, caminho };
+    };
+
+    const buildIssueUrl = (payload) => {
+      const title = `[NOVA ATA] Ata ${String(payload.numero).padStart(3, '0')} • ${payload.titulo}`;
+      const issueBody = [
+        'Solicitação automática de nova ata.',
         '',
-        'Ação com Codex:',
-        `"Criar nova ata com estes dados e publicar no Hub, atualizando catalogo.json/catalogo.html."`
+        '<!-- ATA_PAYLOAD_START -->',
+        '```json',
+        JSON.stringify({
+          numero: payload.numero,
+          data: payload.data,
+          titulo: payload.titulo,
+          participantes: payload.participantes,
+          prioridade: payload.prioridade,
+          status_inicial: payload.status_inicial
+        }, null, 2),
+        '```',
+        '<!-- ATA_PAYLOAD_END -->'
+      ].join('\n');
+
+      const q = new URLSearchParams({
+        labels: 'nova-ata',
+        title,
+        body: issueBody
+      });
+
+      return `https://github.com/${REPO}/issues/new?${q.toString()}`;
+    };
+
+    const render = () => {
+      const payload = buildPayload();
+      const resumo = [
+        `titulo: Ata ${String(payload.numero).padStart(3, '0')} • ${payload.titulo}`,
+        `data: ${payload.data}`,
+        `participantes: ${payload.participantes}`,
+        `slug: ${payload.slug}`,
+        `caminho_final: ${payload.caminho}`,
+        'categoria: profissional/entregas',
+        'tipo: profissional',
+        `prioridade: ${payload.prioridade}`,
+        `status_inicial: ${payload.status_inicial}`,
+        '',
+        'Ação automática:',
+        '1) clicar em "Publicar automaticamente"',
+        '2) enviar o issue no GitHub',
+        '3) workflow cria a ata e atualiza o catálogo'
       ].join('\n');
 
       out.textContent = resumo;
+      publishBtn.href = buildIssueUrl(payload);
       return resumo;
     };
 
-    document.getElementById('gerar').addEventListener('click', build);
+    document.getElementById('gerar').addEventListener('click', render);
+
     document.getElementById('copiar').addEventListener('click', async () => {
-      const txt = build();
+      const txt = render();
       try {
         await navigator.clipboard.writeText(txt);
         alert('Resumo copiado.');
@@ -120,6 +172,13 @@
         alert('Não foi possível copiar automaticamente neste navegador.');
       }
     });
+
+    ['ata-numero', 'ata-data', 'ata-titulo', 'ata-prioridade', 'ata-status-inicial', 'ata-participantes'].forEach((id) => {
+      document.getElementById(id).addEventListener('input', render);
+      document.getElementById(id).addEventListener('change', render);
+    });
+
+    render();
   </script>
 </body>
 </html>
