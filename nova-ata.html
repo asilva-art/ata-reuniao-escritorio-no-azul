@@ -171,45 +171,57 @@
         if (!res.ok || !data.ok) throw new Error(data.error || `Erro HTTP ${res.status}`);
         statusEl.textContent = 'Solicitação recebida. Confirmando criação da ata...';
 
-        const resolvedAtaUrl = await waitForAtaUrl(data.issue_number);
-        if (!resolvedAtaUrl) {
-          statusEl.innerHTML = `Solicitação enviada com sucesso. A ata está em processamento. Você pode acompanhar em <a href="./catalogo.html" target="_blank" rel="noopener noreferrer">Catálogo</a>.`;
+        const catalogEntry = await waitForCatalogEntry(payload);
+        if (!catalogEntry) {
+          const fallbackAtaUrl = `https://asilva-art.github.io/ata-reuniao-escritorio-no-azul/profissional/entregas/${payload.slug}/`;
+          const fallbackEditUrl = `https://github.com/${REPO}/edit/main/profissional/entregas/${payload.slug}/index.html`;
+          statusEl.innerHTML = `Solicitação enviada. A ata ainda está processando. Tente em instantes: <a href="${fallbackAtaUrl}" target="_blank" rel="noopener noreferrer">Ver ata</a> ou <a href="${fallbackEditUrl}" target="_blank" rel="noopener noreferrer">Editar conteúdo</a>.`;
           return;
         }
 
-        const path = resolvedAtaUrl.replace('https://asilva-art.github.io/ata-reuniao-escritorio-no-azul/', '');
+        const ataUrl = `https://asilva-art.github.io/ata-reuniao-escritorio-no-azul${catalogEntry.link_final}`;
+        const path = catalogEntry.link_final.replace(/^\//, '');
         const editUrl = `https://github.com/${REPO}/edit/main/${path}index.html`;
-        statusEl.innerHTML = `Ata criada com sucesso. Clique em <a href="${resolvedAtaUrl}" target="_blank" rel="noopener noreferrer">Ver ata</a> para visualizar e em <a href="${editUrl}" target="_blank" rel="noopener noreferrer">Editar conteúdo</a> para ajustar o texto.`;
+        statusEl.innerHTML = `Ata criada com sucesso. Clique em <a href="${ataUrl}" target="_blank" rel="noopener noreferrer">Ver ata</a> para visualizar e em <a href="${editUrl}" target="_blank" rel="noopener noreferrer">Editar conteúdo</a> para ajustar o texto.`;
       } catch (e) {
         statusEl.textContent = `Falha ao publicar automaticamente: ${e.message}. Se o endpoint ainda não estiver publicado, me avise para concluir o deploy serverless.`;
       }
     };
 
-    const extractAtaUrlFromComment = (body) => {
-      if (!body) return '';
-      const m = body.match(/URL da ata:\\s*(https:\\/\\/[^\\s]+)/i);
-      return m ? m[1].trim() : '';
-    };
+    const normalizeText = (txt) => (txt || '')
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9 ]+/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
 
-    const waitForAtaUrl = async (issueNumber) => {
-      if (!issueNumber) return '';
-      const api = `https://api.github.com/repos/${REPO}/issues/${issueNumber}/comments`;
+    const waitForCatalogEntry = async (payload) => {
+      const api = './catalogo.json';
+      const desiredPrefix = `ata-${String(payload.numero).padStart(3, '0')}-`;
+      const desiredDate = payload.data;
+      const desiredTitle = normalizeText(payload.titulo);
 
-      for (let i = 0; i < 15; i++) {
+      for (let i = 0; i < 20; i++) {
         try {
           const res = await fetch(api, { cache: 'no-store' });
           if (res.ok) {
-            const comments = await res.json();
-            const ordered = Array.isArray(comments) ? comments.slice().reverse() : [];
-            for (const c of ordered) {
-              const url = extractAtaUrlFromComment(c.body || '');
-              if (url) return url;
+            const entries = await res.json();
+            const arr = Array.isArray(entries) ? entries : [];
+            for (const it of arr) {
+              const slug = String(it.slug || '');
+              const dt = String(it.data || '');
+              const title = normalizeText(String(it.titulo || ''));
+              if (!slug.startsWith(desiredPrefix)) continue;
+              if (dt !== desiredDate) continue;
+              if (!title.includes(desiredTitle) && !desiredTitle.includes(title.replace(/^ata \d+\s*/, ''))) continue;
+              return it;
             }
           }
         } catch (_) {}
-        await new Promise((resolve) => setTimeout(resolve, 2000));
+        await new Promise((resolve) => setTimeout(resolve, 2500));
       }
-      return '';
+      return null;
     };
 
     publishBtn.addEventListener('click', publishAutomatic);
