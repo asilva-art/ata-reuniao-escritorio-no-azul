@@ -157,6 +157,60 @@
       font-size: 0.74rem;
       color: #7b8795;
     }
+    .fup-toolbar {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+    .fup-grid {
+      display: grid;
+      gap: 10px;
+    }
+    .fup-item {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 12px;
+      background: #fcfcfc;
+    }
+    .fup-title {
+      margin: 0 0 8px;
+      font-size: 0.95rem;
+      line-height: 1.35;
+    }
+    .fup-fields {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(120px, 1fr));
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .fup-fields-full {
+      display: grid;
+      gap: 8px;
+    }
+    .fup-item label {
+      font-size: 0.78rem;
+      color: var(--muted);
+      display: block;
+      margin-bottom: 4px;
+    }
+    .fup-item input,
+    .fup-item select,
+    .fup-item textarea {
+      width: 100%;
+      border: 1px solid #cfd8dc;
+      border-radius: 8px;
+      padding: 7px 9px;
+      font: 0.87rem/1.4 "Avenir Next", "Segoe UI", sans-serif;
+      background: #fff;
+      color: var(--text);
+    }
+    .fup-item textarea { min-height: 72px; resize: vertical; }
+    .fup-meta {
+      font-size: 0.75rem;
+      color: #7b8795;
+      margin-top: 6px;
+    }
 
     @media (max-width: 800px) {
       .card-head {
@@ -167,6 +221,7 @@
         width: 100%;
       }
       .btn { width: fit-content; }
+      .fup-fields { grid-template-columns: 1fr 1fr; }
     }
   </style>
 </head>
@@ -472,6 +527,26 @@ Próximas etapas sugeridas
         <p class="muted" style="margin:12px 0 0;">Observação: campos de data de retorno foram mantidos em branco quando não há data explícita nos materiais-base.</p>
       </div>
     </section>
+
+    <section class="card" id="bloco-4">
+      <header class="card-head">
+        <h2>Bloco 4 • Painel FUP (comentários por item e novos pontos)</h2>
+        <div class="head-actions">
+          <button class="btn" data-target="content-4">Recolher conteúdo</button>
+        </div>
+      </header>
+      <div class="content" id="content-4">
+        <div class="fup-toolbar">
+          <button class="btn" id="fup-add-point" type="button">Adicionar novo ponto</button>
+          <button class="btn" id="fup-export" type="button">Exportar FUP (JSON)</button>
+          <label class="btn" for="fup-import" style="cursor:pointer;">Importar FUP (JSON)</label>
+          <input id="fup-import" type="file" accept="application/json" style="display:none;" />
+          <button class="btn" id="fup-reset" type="button">Limpar FUP local</button>
+        </div>
+        <div id="fup-list" class="fup-grid"></div>
+        <p class="muted" id="fup-last-save" style="margin:10px 0 0;">Nenhum salvamento ainda.</p>
+      </div>
+    </section>
   </main>
 
   <script>
@@ -488,6 +563,183 @@ Próximas etapas sugeridas
         btn.textContent = hidden ? 'Recolher conteúdo' : 'Expandir conteúdo';
       });
     });
+
+    const FUP_STORAGE_KEY = 'ena_ata_fup_v1';
+    const fupListEl = document.getElementById('fup-list');
+    const fupLastSaveEl = document.getElementById('fup-last-save');
+    const tableRows = Array.from(document.querySelectorAll('#content-3 tbody tr'));
+    const statusOptions = [
+      'Discutido - em aberto',
+      'Discutido - gerou ação',
+      'Discutido - concluído',
+      'Não discutido'
+    ];
+
+    const buildDefaultItems = () => tableRows.map((row, index) => {
+      const cells = row.querySelectorAll('td');
+      return {
+        id: `item-${index + 1}`,
+        source: 'pauta',
+        assunto: cells[0] ? cells[0].innerText.trim() : `Item ${index + 1}`,
+        status: cells[5] ? cells[5].innerText.trim() : 'Discutido - em aberto',
+        responsavel: cells[4] ? cells[4].innerText.trim() : 'Todos',
+        dataRetorno: cells[7] ? cells[7].innerText.trim() : '',
+        fup: '',
+        comentario: ''
+      };
+    });
+
+    const defaultState = {
+      version: 1,
+      lastSavedAt: '',
+      items: buildDefaultItems()
+    };
+
+    let state = defaultState;
+
+    const loadState = () => {
+      try {
+        const raw = localStorage.getItem(FUP_STORAGE_KEY);
+        if (!raw) return;
+        const parsed = JSON.parse(raw);
+        if (!parsed || !Array.isArray(parsed.items)) return;
+        state = parsed;
+      } catch (_) {
+        state = defaultState;
+      }
+    };
+
+    const saveState = () => {
+      state.lastSavedAt = new Date().toISOString();
+      localStorage.setItem(FUP_STORAGE_KEY, JSON.stringify(state));
+      const when = new Date(state.lastSavedAt).toLocaleString('pt-BR');
+      fupLastSaveEl.textContent = `Salvo localmente em ${when}.`;
+    };
+
+    const escapeHtml = (value) => value
+      .replaceAll('&', '&amp;')
+      .replaceAll('<', '&lt;')
+      .replaceAll('>', '&gt;')
+      .replaceAll('"', '&quot;')
+      .replaceAll("'", '&#39;');
+
+    const render = () => {
+      const rowsHtml = state.items.map((item) => {
+        const statusHtml = statusOptions.map((option) => (
+          `<option value="${escapeHtml(option)}" ${option === item.status ? 'selected' : ''}>${escapeHtml(option)}</option>`
+        )).join('');
+
+        return `
+          <article class="fup-item" data-id="${escapeHtml(item.id)}">
+            <h3 class="fup-title">${escapeHtml(item.assunto)}</h3>
+            <div class="fup-fields">
+              <div>
+                <label>Status</label>
+                <select data-field="status">${statusHtml}</select>
+              </div>
+              <div>
+                <label>Responsável</label>
+                <input data-field="responsavel" value="${escapeHtml(item.responsavel || 'Todos')}" />
+              </div>
+              <div>
+                <label>Data de retorno</label>
+                <input data-field="dataRetorno" value="${escapeHtml(item.dataRetorno || '')}" placeholder="dd/mm/aaaa" />
+              </div>
+              <div>
+                <label>FUP</label>
+                <input data-field="fup" value="${escapeHtml(item.fup || '')}" placeholder="ex.: cobrar retorno da ação" />
+              </div>
+            </div>
+            <div class="fup-fields-full">
+              <div>
+                <label>Comentário do item</label>
+                <textarea data-field="comentario" placeholder="Anote evoluções, bloqueios e decisões deste item.">${escapeHtml(item.comentario || '')}</textarea>
+              </div>
+            </div>
+            <div class="fup-meta">Origem: ${item.source === 'novo' ? 'Novo ponto criado nesta ata' : 'Item da compilação da pauta'}</div>
+          </article>
+        `;
+      }).join('');
+
+      fupListEl.innerHTML = rowsHtml;
+      fupListEl.querySelectorAll('input, select, textarea').forEach((field) => {
+        field.addEventListener('input', handleFieldEdit);
+      });
+    };
+
+    const handleFieldEdit = (event) => {
+      const fieldEl = event.target;
+      const itemEl = fieldEl.closest('.fup-item');
+      if (!itemEl) return;
+      const itemId = itemEl.getAttribute('data-id');
+      const field = fieldEl.getAttribute('data-field');
+      const item = state.items.find((entry) => entry.id === itemId);
+      if (!item || !field) return;
+      item[field] = fieldEl.value;
+      saveState();
+    };
+
+    document.getElementById('fup-add-point').addEventListener('click', () => {
+      const now = Date.now();
+      state.items.push({
+        id: `novo-${now}`,
+        source: 'novo',
+        assunto: `Novo ponto ${state.items.filter((i) => i.source === 'novo').length + 1}`,
+        status: 'Não discutido',
+        responsavel: 'Todos',
+        dataRetorno: '',
+        fup: '',
+        comentario: ''
+      });
+      render();
+      saveState();
+    });
+
+    document.getElementById('fup-export').addEventListener('click', () => {
+      const payload = JSON.stringify(state, null, 2);
+      const blob = new Blob([payload], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'fup-ata-reuniao-escritorio-no-azul.json';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    });
+
+    document.getElementById('fup-import').addEventListener('change', async (event) => {
+      const file = event.target.files && event.target.files[0];
+      if (!file) return;
+      try {
+        const text = await file.text();
+        const parsed = JSON.parse(text);
+        if (!parsed || !Array.isArray(parsed.items)) throw new Error('Formato inválido.');
+        state = parsed;
+        render();
+        saveState();
+      } catch (_) {
+        alert('Arquivo JSON inválido para importação de FUP.');
+      } finally {
+        event.target.value = '';
+      }
+    });
+
+    document.getElementById('fup-reset').addEventListener('click', () => {
+      const ok = window.confirm('Deseja limpar o FUP salvo localmente neste navegador?');
+      if (!ok) return;
+      state = { ...defaultState, items: buildDefaultItems() };
+      localStorage.removeItem(FUP_STORAGE_KEY);
+      render();
+      fupLastSaveEl.textContent = 'FUP local removido. Estado padrão restaurado.';
+    });
+
+    loadState();
+    render();
+    if (state.lastSavedAt) {
+      const when = new Date(state.lastSavedAt).toLocaleString('pt-BR');
+      fupLastSaveEl.textContent = `Salvo localmente em ${when}.`;
+    }
   </script>
 </body>
 </html>
