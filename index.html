@@ -5,34 +5,61 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Hub de Atas | Escritório No Azul</title>
   <style>
-    :root { --bg:#f7f7f5; --card:#fff; --text:#1f2328; --line:#e7e8ea; --muted:#5f6b7a; --accent:#0f766e; --shadow:0 12px 30px rgba(0,0,0,.06); --radius:14px; }
+    :root {
+      --bg:#f7f7f5; --card:#fff; --text:#1f2328; --line:#e7e8ea; --muted:#5f6b7a;
+      --accent:#0f766e; --accent-soft:#ecfdf5; --shadow:0 12px 30px rgba(0,0,0,.06); --radius:14px;
+    }
     *{box-sizing:border-box}
-    body{margin:0;font-family:"Avenir Next","Segoe UI",sans-serif;background:radial-gradient(1200px 500px at 0% -10%,#eefaf8 0%,transparent 50%),radial-gradient(900px 420px at 100% 0%,#f3f6ff 0%,transparent 55%),var(--bg);color:var(--text)}
+    body{
+      margin:0;font-family:"Avenir Next","Segoe UI",sans-serif;
+      background:radial-gradient(1200px 500px at 0% -10%,#eefaf8 0%,transparent 50%),radial-gradient(900px 420px at 100% 0%,#f3f6ff 0%,transparent 55%),var(--bg);
+      color:var(--text)
+    }
     main{width:min(1060px,92vw);margin:36px auto 56px}
     .hero{background:linear-gradient(135deg,#0f766e 0%,#115e59 58%,#0a4f4a 100%);color:#fff;border-radius:var(--radius);box-shadow:var(--shadow);padding:28px;margin-bottom:18px}
     .hero h1{margin:0 0 8px;font-size:clamp(1.3rem,2.1vw,1.9rem)}
     .hero p{margin:0;color:#dff5f3}
     .top-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
     .top-actions a{color:#dff5f3;text-decoration:none;border:1px solid rgba(255,255,255,.25);border-radius:999px;padding:6px 12px;font-size:.88rem;background:rgba(255,255,255,.08)}
-    .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px}
-    .card h2{margin:0 0 10px;font-size:1.02rem}
+    .top-actions a:hover{background:rgba(255,255,255,.16)}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px;margin-bottom:16px}
+    .card h2{margin:0 0 10px;font-size:1.04rem}
     .list{display:grid;gap:10px}
     .item{border:1px solid var(--line);border-radius:10px;padding:12px;background:#fcfcfc}
     .item-head{display:flex;justify-content:space-between;gap:8px;align-items:center;flex-wrap:wrap}
     .item-title{margin:0;font-size:1rem}
     .meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
     .meta span{font-size:.8rem;color:#495769;background:#f2f5f7;border:1px solid #e3eaef;border-radius:999px;padding:4px 9px}
-    .btn{border:1px solid #c8d6d5;background:#fff;color:#134e4a;border-radius:999px;font-size:.84rem;padding:8px 12px;text-decoration:none}
+    .btn{border:1px solid #c8d6d5;background:#fff;color:#134e4a;border-radius:999px;font-size:.84rem;padding:8px 12px;text-decoration:none;cursor:pointer}
+    .btn:hover{background:var(--accent-soft)}
     .muted{color:var(--muted);font-size:.9rem}
+    .fup-toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+    .fup-grid{display:grid;gap:10px}
+    .fup-item{border:1px solid var(--line);border-radius:10px;padding:12px;background:#fcfcfc}
+    .fup-item-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
+    .fup-title{margin:0;font-size:.95rem;line-height:1.35}
+    .btn-mini{border:1px solid #c8d6d5;background:#fff;color:#134e4a;border-radius:999px;font-size:.76rem;padding:5px 10px;cursor:pointer}
+    .fup-body.hidden{display:none}
+    .fup-fields{display:grid;grid-template-columns:repeat(4,minmax(120px,1fr));gap:8px;margin-bottom:8px}
+    .fup-fields-full{display:grid;gap:8px}
+    .fup-item label{font-size:.78rem;color:var(--muted);display:block;margin-bottom:4px}
+    .fup-item input,.fup-item select,.fup-item textarea{width:100%;border:1px solid #cfd8dc;border-radius:8px;padding:7px 9px;font:0.87rem/1.4 "Avenir Next","Segoe UI",sans-serif;background:#fff;color:var(--text)}
+    .fup-item textarea{min-height:72px;resize:vertical}
+    .fup-meta{font-size:.75rem;color:#7b8795;margin-top:6px}
+    @media (max-width: 800px){
+      .fup-fields{grid-template-columns:1fr 1fr}
+      .fup-item-head{align-items:flex-start;flex-direction:column}
+    }
   </style>
 </head>
 <body>
   <main>
     <section class="hero">
       <h1>Hub de Atas do Escritório No Azul</h1>
-      <p>Central para consultar atas, acompanhar status e abrir FUP de cada reunião.</p>
+      <p>Central para atas formais (calls) e para o acompanhamento contínuo do dia a dia.</p>
       <div class="top-actions">
         <a href="./catalogo.html">Ver catálogo (tabela)</a>
+        <a href="./nova-ata.html">Nova ata (modelo)</a>
       </div>
     </section>
 
@@ -40,6 +67,20 @@
       <h2>Atas disponíveis</h2>
       <div id="ata-list" class="list"></div>
       <p id="loading" class="muted">Carregando catálogo...</p>
+    </section>
+
+    <section class="card">
+      <h2>Painel FUP Central (operações do dia a dia)</h2>
+      <p class="muted" style="margin:0 0 10px;">Use este painel entre as reuniões. Na próxima ata, consolide os pontos relevantes deste acompanhamento.</p>
+      <div class="fup-toolbar">
+        <button class="btn" id="fup-add-point" type="button">Adicionar novo ponto</button>
+        <button class="btn" id="fup-export" type="button">Exportar FUP (JSON)</button>
+        <label class="btn" for="fup-import" style="cursor:pointer;">Importar FUP (JSON)</label>
+        <input id="fup-import" type="file" accept="application/json" style="display:none;" />
+        <button class="btn" id="fup-reset" type="button">Limpar FUP local</button>
+      </div>
+      <div id="fup-list" class="fup-grid"></div>
+      <p class="muted" id="fup-last-save">Nenhum salvamento ainda.</p>
     </section>
   </main>
 
@@ -91,6 +132,186 @@
       .catch(() => {
         loadingEl.textContent = 'Não foi possível carregar o catálogo.';
       });
+
+    const FUP_STORAGE_KEY = 'ena_hub_fup_v1';
+    const fupListEl = document.getElementById('fup-list');
+    const fupLastSaveEl = document.getElementById('fup-last-save');
+    const statusOptions = ['Discutido - em aberto', 'Discutido - gerou ação', 'Discutido - concluído', 'Não discutido'];
+    const contextoOptions = ['Nova reunião', 'Retorno do dia a dia'];
+
+    const defaultState = {
+      version: 1,
+      lastSavedAt: '',
+      items: []
+    };
+
+    let state = defaultState;
+
+    const loadState = () => {
+      try {
+        const raw = localStorage.getItem(FUP_STORAGE_KEY);
+        if (!raw) return;
+        const parsed = JSON.parse(raw);
+        if (!parsed || !Array.isArray(parsed.items)) return;
+        state = parsed;
+      } catch (_) {
+        state = defaultState;
+      }
+    };
+
+    const saveState = () => {
+      state.lastSavedAt = new Date().toISOString();
+      localStorage.setItem(FUP_STORAGE_KEY, JSON.stringify(state));
+      const when = new Date(state.lastSavedAt).toLocaleString('pt-BR');
+      fupLastSaveEl.textContent = `Salvo localmente em ${when}.`;
+    };
+
+    const escapeHtml = (value) => String(value ?? '')
+      .replaceAll('&', '&amp;')
+      .replaceAll('<', '&lt;')
+      .replaceAll('>', '&gt;')
+      .replaceAll('"', '&quot;')
+      .replaceAll("'", '&#39;');
+
+    const renderFup = () => {
+      if (!state.items.length) {
+        fupListEl.innerHTML = '<p class="muted">Sem pontos ainda. Clique em "Adicionar novo ponto".</p>';
+        return;
+      }
+
+      fupListEl.innerHTML = state.items.map((item) => {
+        const statusHtml = statusOptions.map((option) => (`<option value="${escapeHtml(option)}" ${option === item.status ? 'selected' : ''}>${escapeHtml(option)}</option>`)).join('');
+        const contextoHtml = contextoOptions.map((option) => (`<option value="${escapeHtml(option)}" ${option === item.contextoRegistro ? 'selected' : ''}>${escapeHtml(option)}</option>`)).join('');
+        const collapseLabel = item.collapsed ? 'Expandir' : 'Recolher';
+
+        return `
+          <article class="fup-item" data-id="${escapeHtml(item.id)}">
+            <div class="fup-item-head">
+              <h3 class="fup-title">${escapeHtml(item.assunto)}</h3>
+              <button class="btn-mini fup-toggle" type="button" data-id="${escapeHtml(item.id)}">${collapseLabel}</button>
+            </div>
+            <div class="fup-body ${item.collapsed ? 'hidden' : ''}">
+              <div class="fup-fields">
+                <div>
+                  <label>Status</label>
+                  <select data-field="status">${statusHtml}</select>
+                </div>
+                <div>
+                  <label>Responsável</label>
+                  <input data-field="responsavel" value="${escapeHtml(item.responsavel || 'Todos')}" />
+                </div>
+                <div>
+                  <label>Data de retorno</label>
+                  <input data-field="dataRetorno" value="${escapeHtml(item.dataRetorno || '')}" placeholder="dd/mm/aaaa" />
+                </div>
+                <div>
+                  <label>FUP</label>
+                  <input data-field="fup" value="${escapeHtml(item.fup || '')}" placeholder="ex.: cobrar retorno da ação" />
+                </div>
+              </div>
+              <div class="fup-fields-full">
+                <div>
+                  <label>Origem do comentário/FUP</label>
+                  <select data-field="contextoRegistro">${contextoHtml}</select>
+                </div>
+                <div>
+                  <label>Comentário do item</label>
+                  <textarea data-field="comentario" placeholder="Anote evoluções, bloqueios e decisões deste item.">${escapeHtml(item.comentario || '')}</textarea>
+                </div>
+              </div>
+              <div class="fup-meta">Painel central do Hub.</div>
+            </div>
+          </article>
+        `;
+      }).join('');
+
+      fupListEl.querySelectorAll('input, select, textarea').forEach((field) => {
+        field.addEventListener('input', (event) => {
+          const fieldEl = event.target;
+          const itemEl = fieldEl.closest('.fup-item');
+          if (!itemEl) return;
+          const itemId = itemEl.getAttribute('data-id');
+          const item = state.items.find((entry) => entry.id === itemId);
+          const fieldName = fieldEl.getAttribute('data-field');
+          if (!item || !fieldName) return;
+          item[fieldName] = fieldEl.value;
+          saveState();
+        });
+      });
+
+      fupListEl.querySelectorAll('.fup-toggle').forEach((btn) => {
+        btn.addEventListener('click', (event) => {
+          const itemId = event.target.getAttribute('data-id');
+          const item = state.items.find((entry) => entry.id === itemId);
+          if (!item) return;
+          item.collapsed = !item.collapsed;
+          renderFup();
+          saveState();
+        });
+      });
+    };
+
+    document.getElementById('fup-add-point').addEventListener('click', () => {
+      const now = Date.now();
+      state.items.push({
+        id: `hub-${now}`,
+        assunto: `Novo ponto ${state.items.length + 1}`,
+        status: 'Não discutido',
+        responsavel: 'Todos',
+        dataRetorno: '',
+        contextoRegistro: 'Retorno do dia a dia',
+        fup: '',
+        comentario: '',
+        collapsed: false
+      });
+      renderFup();
+      saveState();
+    });
+
+    document.getElementById('fup-export').addEventListener('click', () => {
+      const payload = JSON.stringify(state, null, 2);
+      const blob = new Blob([payload], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'fup-hub-escritorio-no-azul.json';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    });
+
+    document.getElementById('fup-import').addEventListener('change', async (event) => {
+      const file = event.target.files && event.target.files[0];
+      if (!file) return;
+      try {
+        const parsed = JSON.parse(await file.text());
+        if (!parsed || !Array.isArray(parsed.items)) throw new Error('Formato inválido');
+        state = parsed;
+        renderFup();
+        saveState();
+      } catch (_) {
+        alert('Arquivo JSON inválido para importação de FUP.');
+      } finally {
+        event.target.value = '';
+      }
+    });
+
+    document.getElementById('fup-reset').addEventListener('click', () => {
+      const ok = window.confirm('Deseja limpar o FUP do Hub salvo localmente neste navegador?');
+      if (!ok) return;
+      state = { ...defaultState, items: [] };
+      localStorage.removeItem(FUP_STORAGE_KEY);
+      renderFup();
+      fupLastSaveEl.textContent = 'FUP do Hub removido. Estado padrão restaurado.';
+    });
+
+    loadState();
+    renderFup();
+    if (state.lastSavedAt) {
+      const when = new Date(state.lastSavedAt).toLocaleString('pt-BR');
+      fupLastSaveEl.textContent = `Salvo localmente em ${when}.`;
+    }
   </script>
 </body>
 </html>
