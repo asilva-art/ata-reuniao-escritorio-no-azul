@@ -1,0 +1,8 @@
+name = "ata-hub-publisher"
+main = "src/index.js"
+compatibility_date = "2026-03-06"
+
+[vars]
+GITHUB_OWNER = "asilva-art"
+GITHUB_REPO = "ata-reuniao-escritorio-no-azul"
+ALLOWED_ORIGINS = "https://asilva-art.github.io,https://avasconsult.com.br,https://www.avasconsult.com.br"

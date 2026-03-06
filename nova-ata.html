@@ -28,25 +28,10 @@
   <main>
     <section class="card">
       <h1>Nova ata (automático)</h1>
-      <p>Preencha os dados e clique em <strong>Publicar automaticamente</strong>. A página envia direto para a API do GitHub e dispara o workflow sem te jogar para outra tela.</p>
-      <p class="hint">Fluxo: página -> API GitHub (issue com label `nova-ata`) -> GitHub Action cria/atualiza ata + catálogo.</p>
+      <p>Preencha os dados e clique em <strong>Publicar automaticamente</strong>. Não precisa de token no navegador.</p>
+      <p class="hint">Fluxo: página -> endpoint serverless -> issue automático -> GitHub Action cria/atualiza ata + catálogo.</p>
       <div class="actions">
         <a class="btn" href="./index.html">Voltar ao Hub</a>
-      </div>
-    </section>
-
-    <section class="card">
-      <p><strong>Conexão GitHub (1x por navegador)</strong></p>
-      <div class="grid">
-        <div style="grid-column:1/-1;">
-          <label>Token GitHub (escopos: repo + workflow)</label>
-          <input id="gh-token" type="password" placeholder="ghp_xxx..." />
-          <p class="hint" style="margin-top:6px;">O token fica salvo apenas no seu navegador para evitar redirecionamento manual.</p>
-        </div>
-      </div>
-      <div class="actions">
-        <button class="btn" id="salvar-token" type="button">Salvar token</button>
-        <button class="btn" id="limpar-token" type="button">Remover token</button>
       </div>
     </section>
 
@@ -99,7 +84,7 @@
   </main>
 
   <script>
-    const REPO = 'asilva-art/ata-reuniao-escritorio-no-azul';
+    const API_BASE = window.ATA_API_BASE || 'https://ata-hub-publisher.workers.dev';
 
     const slugify = (txt) => txt
       .toLowerCase()
@@ -109,11 +94,9 @@
       .replace(/^-+|-+$/g, '')
       .slice(0, 80);
 
-    const TOKEN_KEY = 'ena_github_token_v1';
     const out = document.getElementById('saida');
     const publishBtn = document.getElementById('publicar');
     const statusEl = document.getElementById('status-publicacao');
-    const tokenInput = document.getElementById('gh-token');
 
     const buildPayload = () => {
       const numero = document.getElementById('ata-numero').value.trim() || '000';
@@ -126,38 +109,6 @@
       const caminho = `/profissional/entregas/${slug}/index.html`;
 
       return { numero, data, titulo, participantes, prioridade, status_inicial, slug, caminho };
-    };
-
-    const buildIssueBody = (payload) => {
-      return [
-        'Solicitação automática de nova ata.',
-        '',
-        '<!-- ATA_PAYLOAD_START -->',
-        '```json',
-        JSON.stringify({
-          numero: payload.numero,
-          data: payload.data,
-          titulo: payload.titulo,
-          participantes: payload.participantes,
-          prioridade: payload.prioridade,
-          status_inicial: payload.status_inicial
-        }, null, 2),
-        '```',
-        '<!-- ATA_PAYLOAD_END -->'
-      ].join('\n');
-    };
-
-    const buildIssueUrl = (payload) => {
-      const title = `[NOVA ATA] Ata ${String(payload.numero).padStart(3, '0')} • ${payload.titulo}`;
-      const issueBody = buildIssueBody(payload);
-
-      const q = new URLSearchParams({
-        labels: 'nova-ata',
-        title,
-        body: issueBody
-      });
-
-      return `https://github.com/${REPO}/issues/new?${q.toString()}`;
     };
 
     const render = () => {
@@ -195,61 +146,31 @@
       }
     });
 
-    const saveToken = () => {
-      const t = tokenInput.value.trim();
-      if (!t) {
-        statusEl.textContent = 'Informe um token válido.';
-        return;
-      }
-      localStorage.setItem(TOKEN_KEY, t);
-      statusEl.textContent = 'Token salvo neste navegador.';
-    };
-
-    const clearToken = () => {
-      localStorage.removeItem(TOKEN_KEY);
-      tokenInput.value = '';
-      statusEl.textContent = 'Token removido deste navegador.';
-    };
-
-    document.getElementById('salvar-token').addEventListener('click', saveToken);
-    document.getElementById('limpar-token').addEventListener('click', clearToken);
-
     const publishAutomatic = async () => {
       const payload = buildPayload();
-      const token = localStorage.getItem(TOKEN_KEY) || tokenInput.value.trim();
-      if (!token) {
-        statusEl.textContent = 'Salve o token GitHub antes de publicar.';
-        return;
-      }
-
       statusEl.textContent = 'Publicando...';
-      const title = `[NOVA ATA] Ata ${String(payload.numero).padStart(3, '0')} • ${payload.titulo}`;
-      const body = buildIssueBody(payload);
 
       try {
-        const res = await fetch(`https://api.github.com/repos/${REPO}/issues`, {
+        const res = await fetch(`${API_BASE}/api/nova-ata`, {
           method: 'POST',
           headers: {
-            'Authorization': `token ${token}`,
-            'Accept': 'application/vnd.github+json',
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            title,
-            body,
-            labels: ['nova-ata']
+            numero: payload.numero,
+            data: payload.data,
+            titulo: payload.titulo,
+            participantes: payload.participantes,
+            prioridade: payload.prioridade,
+            status_inicial: payload.status_inicial
           })
         });
 
-        if (!res.ok) {
-          const err = await res.json().catch(() => ({}));
-          throw new Error(err.message || `Erro HTTP ${res.status}`);
-        }
-
-        const data = await res.json();
-        statusEl.innerHTML = `Issue criado com sucesso: <a href="${data.html_url}" target="_blank" rel="noopener noreferrer">${data.html_url}</a>. O workflow vai processar e fechar automaticamente.`;
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok || !data.ok) throw new Error(data.error || `Erro HTTP ${res.status}`);
+        statusEl.innerHTML = `Solicitação enviada com sucesso. Issue: <a href="${data.issue_url}" target="_blank" rel="noopener noreferrer">${data.issue_url}</a>.`;
       } catch (e) {
-        statusEl.textContent = `Falha ao publicar automaticamente: ${e.message}.`;
+        statusEl.textContent = `Falha ao publicar automaticamente: ${e.message}. Se o endpoint ainda não estiver publicado, me avise para concluir o deploy serverless.`;
       }
     };
 
@@ -260,8 +181,6 @@
       document.getElementById(id).addEventListener('change', render);
     });
 
-    const savedToken = localStorage.getItem(TOKEN_KEY);
-    if (savedToken) tokenInput.value = savedToken;
     render();
   </script>
 </body>
