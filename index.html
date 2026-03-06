@@ -38,7 +38,9 @@
     .fup-item{border:1px solid var(--line);border-radius:10px;padding:12px;background:#fcfcfc}
     .fup-item-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
     .fup-title{margin:0;font-size:.95rem;line-height:1.35}
+    .fup-actions{display:flex;gap:6px;flex-wrap:wrap}
     .btn-mini{border:1px solid #c8d6d5;background:#fff;color:#134e4a;border-radius:999px;font-size:.76rem;padding:5px 10px;cursor:pointer}
+    .btn-mini.danger{border-color:#e6b8b8;color:#8b2323}
     .fup-body.hidden{display:none}
     .fup-fields{display:grid;grid-template-columns:repeat(4,minmax(120px,1fr));gap:8px;margin-bottom:8px}
     .fup-fields-full{display:grid;gap:8px}
@@ -74,6 +76,7 @@
       <p class="muted" style="margin:0 0 10px;">Use este painel entre as reuniões. Na próxima ata, consolide os pontos relevantes deste acompanhamento.</p>
       <div class="fup-toolbar">
         <button class="btn" id="fup-add-point" type="button">Adicionar novo ponto</button>
+        <button class="btn" id="fup-clear-completed" type="button">Limpar concluídos</button>
         <button class="btn" id="fup-export" type="button">Exportar FUP (JSON)</button>
         <label class="btn" for="fup-import" style="cursor:pointer;">Importar FUP (JSON)</label>
         <input id="fup-import" type="file" accept="application/json" style="display:none;" />
@@ -189,7 +192,10 @@
           <article class="fup-item" data-id="${escapeHtml(item.id)}">
             <div class="fup-item-head">
               <h3 class="fup-title">${escapeHtml(item.assunto)}</h3>
-              <button class="btn-mini fup-toggle" type="button" data-id="${escapeHtml(item.id)}">${collapseLabel}</button>
+              <div class="fup-actions">
+                <button class="btn-mini fup-toggle" type="button" data-id="${escapeHtml(item.id)}">${collapseLabel}</button>
+                <button class="btn-mini danger fup-delete" type="button" data-id="${escapeHtml(item.id)}">Excluir</button>
+              </div>
             </div>
             <div class="fup-body ${item.collapsed ? 'hidden' : ''}">
               <div class="fup-fields">
@@ -250,6 +256,19 @@
           saveState();
         });
       });
+
+      fupListEl.querySelectorAll('.fup-delete').forEach((btn) => {
+        btn.addEventListener('click', (event) => {
+          const itemId = event.target.getAttribute('data-id');
+          const item = state.items.find((entry) => entry.id === itemId);
+          if (!item) return;
+          const ok = window.confirm(`Excluir o item "${item.assunto}"?`);
+          if (!ok) return;
+          state.items = state.items.filter((entry) => entry.id !== itemId);
+          renderFup();
+          saveState();
+        });
+      });
     };
 
     document.getElementById('fup-add-point').addEventListener('click', () => {
@@ -265,6 +284,21 @@
         comentario: '',
         collapsed: false
       });
+      renderFup();
+      saveState();
+    });
+
+    document.getElementById('fup-clear-completed').addEventListener('click', () => {
+      const before = state.items.length;
+      const remaining = state.items.filter((item) => item.status !== 'Discutido - concluído');
+      const removed = before - remaining.length;
+      if (removed === 0) {
+        fupLastSaveEl.textContent = 'Nenhum item concluído para limpar.';
+        return;
+      }
+      const ok = window.confirm(`Remover ${removed} item(ns) concluído(s)?`);
+      if (!ok) return;
+      state.items = remaining;
       renderFup();
       saveState();
     });
