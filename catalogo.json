@@ -6,7 +6,9 @@
     "tipo": "profissional",
     "data": "2026-03-06",
     "link_final": "/profissional/entregas/ata-002-reuniao-de-pendencias/",
-    "prioridade": "média"
+    "prioridade": "média",
+    "status": "rascunho",
+    "publicado": false
   },
   {
     "titulo": "Ata 001 • Reunião de Pendências",
@@ -15,6 +17,8 @@
     "tipo": "profissional",
     "data": "2026-03-04",
     "link_final": "/profissional/entregas/ata-reuniao-escritorio-no-azul/",
-    "prioridade": "alta"
+    "prioridade": "alta",
+    "status": "publicada",
+    "publicado": true
   }
 ]

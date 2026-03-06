@@ -101,11 +101,10 @@
 
       listEl.innerHTML = items.map((it, idx) => {
         const link = toAbsoluteLink(it.link_final);
-        const numero = idx + 1;
         return `
           <article class="item">
             <div class="item-head">
-              <h3 class="item-title">Ata ${String(numero).padStart(3, '0')} • ${it.titulo}</h3>
+              <h3 class="item-title">${it.titulo}</h3>
               <a class="btn" href="${link}">Abrir ata</a>
             </div>
             <div class="meta">
@@ -126,7 +125,9 @@
         return res.json();
       })
       .then((items) => {
-        renderItems(Array.isArray(items) ? items : []);
+        const all = Array.isArray(items) ? items : [];
+        const published = all.filter((it) => it.publicado !== false);
+        renderItems(published);
         loadingEl.textContent = '';
       })
       .catch(() => {
