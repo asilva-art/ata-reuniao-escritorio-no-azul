@@ -3,16 +3,94 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Redirecionando...</title>
-  <meta http-equiv="refresh" content="0; url=./profissional/entregas/ata-reuniao-escritorio-no-azul/" />
-  <link rel="canonical" href="./profissional/entregas/ata-reuniao-escritorio-no-azul/" />
+  <title>Hub de Atas | Escritório No Azul</title>
   <style>
-    body { font-family: "Avenir Next", "Segoe UI", sans-serif; margin: 2rem; color: #1f2328; }
-    a { color: #0f766e; }
+    :root { --bg:#f7f7f5; --card:#fff; --text:#1f2328; --line:#e7e8ea; --muted:#5f6b7a; --accent:#0f766e; --shadow:0 12px 30px rgba(0,0,0,.06); --radius:14px; }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:"Avenir Next","Segoe UI",sans-serif;background:radial-gradient(1200px 500px at 0% -10%,#eefaf8 0%,transparent 50%),radial-gradient(900px 420px at 100% 0%,#f3f6ff 0%,transparent 55%),var(--bg);color:var(--text)}
+    main{width:min(1060px,92vw);margin:36px auto 56px}
+    .hero{background:linear-gradient(135deg,#0f766e 0%,#115e59 58%,#0a4f4a 100%);color:#fff;border-radius:var(--radius);box-shadow:var(--shadow);padding:28px;margin-bottom:18px}
+    .hero h1{margin:0 0 8px;font-size:clamp(1.3rem,2.1vw,1.9rem)}
+    .hero p{margin:0;color:#dff5f3}
+    .top-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+    .top-actions a{color:#dff5f3;text-decoration:none;border:1px solid rgba(255,255,255,.25);border-radius:999px;padding:6px 12px;font-size:.88rem;background:rgba(255,255,255,.08)}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px}
+    .card h2{margin:0 0 10px;font-size:1.02rem}
+    .list{display:grid;gap:10px}
+    .item{border:1px solid var(--line);border-radius:10px;padding:12px;background:#fcfcfc}
+    .item-head{display:flex;justify-content:space-between;gap:8px;align-items:center;flex-wrap:wrap}
+    .item-title{margin:0;font-size:1rem}
+    .meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+    .meta span{font-size:.8rem;color:#495769;background:#f2f5f7;border:1px solid #e3eaef;border-radius:999px;padding:4px 9px}
+    .btn{border:1px solid #c8d6d5;background:#fff;color:#134e4a;border-radius:999px;font-size:.84rem;padding:8px 12px;text-decoration:none}
+    .muted{color:var(--muted);font-size:.9rem}
   </style>
 </head>
 <body>
-  <p>Redirecionando para a nova rota padronizada...</p>
-  <p><a href="./profissional/entregas/ata-reuniao-escritorio-no-azul/">Abrir conteúdo</a></p>
+  <main>
+    <section class="hero">
+      <h1>Hub de Atas do Escritório No Azul</h1>
+      <p>Central para consultar atas, acompanhar status e abrir FUP de cada reunião.</p>
+      <div class="top-actions">
+        <a href="./catalogo.html">Ver catálogo (tabela)</a>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Atas disponíveis</h2>
+      <div id="ata-list" class="list"></div>
+      <p id="loading" class="muted">Carregando catálogo...</p>
+    </section>
+  </main>
+
+  <script>
+    const listEl = document.getElementById('ata-list');
+    const loadingEl = document.getElementById('loading');
+
+    const toAbsoluteLink = (path) => {
+      if (!path) return '#';
+      return path.startsWith('/') ? `.${path}` : path;
+    };
+
+    const renderItems = (items) => {
+      if (!items.length) {
+        listEl.innerHTML = '<p class="muted">Nenhuma ata cadastrada ainda.</p>';
+        return;
+      }
+
+      listEl.innerHTML = items.map((it, idx) => {
+        const link = toAbsoluteLink(it.link_final);
+        const numero = idx + 1;
+        return `
+          <article class="item">
+            <div class="item-head">
+              <h3 class="item-title">Ata ${String(numero).padStart(3, '0')} • ${it.titulo}</h3>
+              <a class="btn" href="${link}">Abrir ata</a>
+            </div>
+            <div class="meta">
+              <span>Categoria: ${it.categoria}</span>
+              <span>Tipo: ${it.tipo}</span>
+              <span>Data: ${it.data}</span>
+              <span>Prioridade: ${it.prioridade}</span>
+              <span>Slug: ${it.slug}</span>
+            </div>
+          </article>
+        `;
+      }).join('');
+    };
+
+    fetch('./catalogo.json', { cache: 'no-store' })
+      .then((res) => {
+        if (!res.ok) throw new Error('Falha ao carregar catálogo');
+        return res.json();
+      })
+      .then((items) => {
+        renderItems(Array.isArray(items) ? items : []);
+        loadingEl.textContent = '';
+      })
+      .catch(() => {
+        loadingEl.textContent = 'Não foi possível carregar o catálogo.';
+      });
+  </script>
 </body>
 </html>

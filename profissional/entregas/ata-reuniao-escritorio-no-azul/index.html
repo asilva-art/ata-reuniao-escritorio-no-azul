@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Pauta de Reunião: Reunião de Pendências - 001</title>
+  <title>Hub de Atas | Escritório No Azul</title>
   <style>
     :root {
       --bg: #f7f7f5;
@@ -65,6 +65,22 @@
       border-radius: 999px;
       padding: 6px 12px;
     }
+    .hero-links {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+    .hero-links a {
+      color: #dff5f3;
+      text-decoration: none;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      border-radius: 999px;
+      padding: 6px 12px;
+      font-size: 0.88rem;
+      background: rgba(255, 255, 255, 0.08);
+    }
+    .hero-links a:hover { background: rgba(255, 255, 255, 0.16); }
 
     .card {
       background: var(--card);
@@ -246,11 +262,16 @@
 <body>
   <main class="wrap">
     <section class="hero">
-      <h1>Pauta de Reunião: Reunião de Pendências - 001</h1>
+      <h1>Hub de Atas do Escritório No Azul</h1>
       <div class="meta">
+        <span>Ata atual: 001</span>
         <span>Empresa: Escritório No Azul</span>
-        <span>Data: 04/03/2026</span>
+        <span>Data da ata: 04/03/2026</span>
         <span>Participantes: Layene Oliveira (Skala Lançamentos) e Alencar Silva (Lube Digital)</span>
+      </div>
+      <div class="hero-links">
+        <a href="../../../index.html">Ir para Hub</a>
+        <a href="../../../catalogo.html">Abrir catálogo</a>
       </div>
     </section>
 
@@ -592,6 +613,10 @@ Próximas etapas sugeridas
       'Discutido - concluído',
       'Não discutido'
     ];
+    const contextoOptions = [
+      'Nova reunião',
+      'Retorno do dia a dia'
+    ];
 
     const buildDefaultItems = () => tableRows.map((row, index) => {
       const cells = row.querySelectorAll('td');
@@ -790,7 +815,3 @@ Próximas etapas sugeridas
   </script>
 </body>
 </html>
-    const contextoOptions = [
-      'Nova reunião',
-      'Retorno do dia a dia'
-    ];
