@@ -173,11 +173,28 @@
       padding: 12px;
       background: #fcfcfc;
     }
+    .fup-item-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
     .fup-title {
-      margin: 0 0 8px;
+      margin: 0;
       font-size: 0.95rem;
       line-height: 1.35;
     }
+    .btn-mini {
+      border: 1px solid #c8d6d5;
+      background: #fff;
+      color: #134e4a;
+      border-radius: 999px;
+      font-size: 0.76rem;
+      padding: 5px 10px;
+      cursor: pointer;
+    }
+    .fup-body.hidden { display: none; }
     .fup-fields {
       display: grid;
       grid-template-columns: repeat(4, minmax(120px, 1fr));
@@ -222,6 +239,7 @@
       }
       .btn { width: fit-content; }
       .fup-fields { grid-template-columns: 1fr 1fr; }
+      .fup-item-head { align-items: flex-start; flex-direction: column; }
     }
   </style>
 </head>
@@ -584,8 +602,10 @@ Próximas etapas sugeridas
         status: cells[5] ? cells[5].innerText.trim() : 'Discutido - em aberto',
         responsavel: cells[4] ? cells[4].innerText.trim() : 'Todos',
         dataRetorno: cells[7] ? cells[7].innerText.trim() : '',
+        contextoRegistro: 'Nova reunião',
         fup: '',
-        comentario: ''
+        comentario: '',
+        collapsed: false
       };
     });
 
@@ -628,35 +648,48 @@ Próximas etapas sugeridas
         const statusHtml = statusOptions.map((option) => (
           `<option value="${escapeHtml(option)}" ${option === item.status ? 'selected' : ''}>${escapeHtml(option)}</option>`
         )).join('');
+        const contextoHtml = contextoOptions.map((option) => (
+          `<option value="${escapeHtml(option)}" ${option === item.contextoRegistro ? 'selected' : ''}>${escapeHtml(option)}</option>`
+        )).join('');
+        const collapseLabel = item.collapsed ? 'Expandir' : 'Recolher';
 
         return `
           <article class="fup-item" data-id="${escapeHtml(item.id)}">
-            <h3 class="fup-title">${escapeHtml(item.assunto)}</h3>
-            <div class="fup-fields">
-              <div>
-                <label>Status</label>
-                <select data-field="status">${statusHtml}</select>
-              </div>
-              <div>
-                <label>Responsável</label>
-                <input data-field="responsavel" value="${escapeHtml(item.responsavel || 'Todos')}" />
-              </div>
-              <div>
-                <label>Data de retorno</label>
-                <input data-field="dataRetorno" value="${escapeHtml(item.dataRetorno || '')}" placeholder="dd/mm/aaaa" />
-              </div>
-              <div>
-                <label>FUP</label>
-                <input data-field="fup" value="${escapeHtml(item.fup || '')}" placeholder="ex.: cobrar retorno da ação" />
-              </div>
+            <div class="fup-item-head">
+              <h3 class="fup-title">${escapeHtml(item.assunto)}</h3>
+              <button class="btn-mini fup-toggle" type="button" data-id="${escapeHtml(item.id)}">${collapseLabel}</button>
             </div>
-            <div class="fup-fields-full">
-              <div>
-                <label>Comentário do item</label>
-                <textarea data-field="comentario" placeholder="Anote evoluções, bloqueios e decisões deste item.">${escapeHtml(item.comentario || '')}</textarea>
+            <div class="fup-body ${item.collapsed ? 'hidden' : ''}">
+              <div class="fup-fields">
+                <div>
+                  <label>Status</label>
+                  <select data-field="status">${statusHtml}</select>
+                </div>
+                <div>
+                  <label>Responsável</label>
+                  <input data-field="responsavel" value="${escapeHtml(item.responsavel || 'Todos')}" />
+                </div>
+                <div>
+                  <label>Data de retorno</label>
+                  <input data-field="dataRetorno" value="${escapeHtml(item.dataRetorno || '')}" placeholder="dd/mm/aaaa" />
+                </div>
+                <div>
+                  <label>FUP</label>
+                  <input data-field="fup" value="${escapeHtml(item.fup || '')}" placeholder="ex.: cobrar retorno da ação" />
+                </div>
               </div>
+              <div class="fup-fields-full">
+                <div>
+                  <label>Origem do comentário/FUP</label>
+                  <select data-field="contextoRegistro">${contextoHtml}</select>
+                </div>
+                <div>
+                  <label>Comentário do item</label>
+                  <textarea data-field="comentario" placeholder="Anote evoluções, bloqueios e decisões deste item.">${escapeHtml(item.comentario || '')}</textarea>
+                </div>
+              </div>
+              <div class="fup-meta">Origem do ponto: ${item.source === 'novo' ? 'Novo ponto criado nesta ata' : 'Item da compilação da pauta'}</div>
             </div>
-            <div class="fup-meta">Origem: ${item.source === 'novo' ? 'Novo ponto criado nesta ata' : 'Item da compilação da pauta'}</div>
           </article>
         `;
       }).join('');
@@ -664,6 +697,9 @@ Próximas etapas sugeridas
       fupListEl.innerHTML = rowsHtml;
       fupListEl.querySelectorAll('input, select, textarea').forEach((field) => {
         field.addEventListener('input', handleFieldEdit);
+      });
+      fupListEl.querySelectorAll('.fup-toggle').forEach((btn) => {
+        btn.addEventListener('click', handleToggleItem);
       });
     };
 
@@ -679,6 +715,15 @@ Próximas etapas sugeridas
       saveState();
     };
 
+    const handleToggleItem = (event) => {
+      const itemId = event.target.getAttribute('data-id');
+      const item = state.items.find((entry) => entry.id === itemId);
+      if (!item) return;
+      item.collapsed = !item.collapsed;
+      render();
+      saveState();
+    };
+
     document.getElementById('fup-add-point').addEventListener('click', () => {
       const now = Date.now();
       state.items.push({
@@ -688,8 +733,10 @@ Próximas etapas sugeridas
         status: 'Não discutido',
         responsavel: 'Todos',
         dataRetorno: '',
+        contextoRegistro: 'Retorno do dia a dia',
         fup: '',
-        comentario: ''
+        comentario: '',
+        collapsed: false
       });
       render();
       saveState();
@@ -743,3 +790,7 @@ Próximas etapas sugeridas
   </script>
 </body>
 </html>
+    const contextoOptions = [
+      'Nova reunião',
+      'Retorno do dia a dia'
+    ];
