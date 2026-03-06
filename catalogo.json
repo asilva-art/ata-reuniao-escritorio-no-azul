@@ -1,44 +1,5 @@
 [
   {
-    "titulo": "Ata 002 • Reunião de Revisão de Produtos",
-    "categoria": "profissional/entregas",
-    "slug": "ata-002-reuniao-de-revisao-de-produtos",
-    "tipo": "profissional",
-    "data": "2026-03-06",
-    "link_final": "/profissional/entregas/ata-002-reuniao-de-revisao-de-produtos/",
-    "prioridade": "alta",
-    "status": "rascunho",
-    "publicado": false,
-    "fonte_criacao": "workflow_auto",
-    "atualizado_em": "2026-03-06"
-  },
-  {
-    "titulo": "Ata 002 • Reunião de Revisão dos Produtos",
-    "categoria": "profissional/entregas",
-    "slug": "ata-002-reuniao-de-revisao-dos-produtos",
-    "tipo": "profissional",
-    "data": "2026-03-06",
-    "link_final": "/profissional/entregas/ata-002-reuniao-de-revisao-dos-produtos/",
-    "prioridade": "alta",
-    "status": "rascunho",
-    "publicado": false,
-    "fonte_criacao": "workflow_auto",
-    "atualizado_em": "2026-03-06"
-  },
-  {
-    "titulo": "Ata 002 • Reunião de Pendências",
-    "categoria": "profissional/entregas",
-    "slug": "ata-002-reuniao-de-pendencias",
-    "tipo": "profissional",
-    "data": "2026-03-06",
-    "link_final": "/profissional/entregas/ata-002-reuniao-de-pendencias/",
-    "prioridade": "média",
-    "status": "rascunho",
-    "publicado": false,
-    "fonte_criacao": "workflow_auto",
-    "atualizado_em": "2026-03-06"
-  },
-  {
     "titulo": "Ata 001 • Reunião de Pendências",
     "categoria": "profissional/entregas",
     "slug": "ata-reuniao-escritorio-no-azul",
