@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Hub de Atas | Ata 099</title>
+  <style>
+    :root {
+      --bg: #f7f7f5;
+      --card: #ffffff;
+      --text: #1f2328;
+      --muted: #5f6b7a;
+      --line: #e7e8ea;
+      --accent: #0f766e;
+      --accent-soft: #ecfdf5;
+      --shadow: 0 12px 30px rgba(0, 0, 0, 0.06);
+      --radius: 14px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Avenir Next", "Segoe UI", "Helvetica Neue", sans-serif;
+      background:
+        radial-gradient(1200px 500px at 0% -10%, #eefaf8 0%, transparent 50%),
+        radial-gradient(900px 420px at 100% 0%, #f3f6ff 0%, transparent 55%),
+        var(--bg);
+      color: var(--text);
+      line-height: 1.55;
+    }
+    .wrap { width: min(1060px, 92vw); margin: 36px auto 56px; }
+    .hero {
+      background: linear-gradient(135deg, #0f766e 0%, #115e59 58%, #0a4f4a 100%);
+      color: #fff;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 28px;
+      margin-bottom: 22px;
+    }
+    .hero h1 { margin: 0 0 10px; font-size: clamp(1.25rem, 2.1vw, 1.8rem); line-height: 1.2; }
+    .meta { display: flex; gap: 12px; flex-wrap: wrap; color: #dff5f3; font-size: 0.95rem; }
+    .meta span { background: rgba(255, 255, 255, 0.12); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 999px; padding: 6px 12px; }
+    .hero-links { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
+    .hero-links a { color: #dff5f3; text-decoration: none; border: 1px solid rgba(255, 255, 255, 0.25); border-radius: 999px; padding: 6px 12px; font-size: 0.88rem; background: rgba(255, 255, 255, 0.08); }
+    .hero-links a:hover { background: rgba(255, 255, 255, 0.16); }
+    .card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 16px; overflow: hidden; }
+    .card-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 16px 18px; border-bottom: 1px solid var(--line); background: #fcfcfc; }
+    .card-head h2 { margin: 0; font-size: 1.03rem; line-height: 1.3; }
+    .head-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .btn { border: 1px solid #c8d6d5; background: #fff; color: #134e4a; border-radius: 999px; font-size: 0.84rem; padding: 8px 12px; cursor: pointer; transition: .15s ease; text-decoration:none; }
+    .btn:hover { background: var(--accent-soft); }
+    .content { padding: 18px; }
+    pre { margin: 0; white-space: pre-wrap; word-break: break-word; font: 0.92rem/1.56 "SF Mono", Menlo, Consolas, monospace; color: #2a3138; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.93rem; }
+    th, td { border: 1px solid var(--line); padding: 10px; vertical-align: top; text-align: left; }
+    th { background: #f8fafb; font-weight: 600; }
+    .muted { color: var(--muted); }
+    @media (max-width: 800px) {
+      .card-head { align-items: flex-start; flex-direction: column; }
+      .head-actions { width: 100%; }
+      .btn { width: fit-content; }
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <section class="hero">
+      <h1>Hub de Atas do Escritório No Azul</h1>
+      <div class="meta">
+        <span>Ata atual: 099</span>
+        <span>Empresa: Escritório No Azul</span>
+        <span>Data da ata: 08/03/2026</span>
+        <span>Participantes: x</span>
+      </div>
+      <div class="hero-links">
+        <a href="../../../index.html">Ir para Hub</a>
+        <a href="../../../catalogo.html">Abrir catálogo</a>
+        <a href="../../../editar-ata.html?slug=ata-099-teste-endpoint">Editar ata</a>
+      </div>
+    </section>
+
+    <section class="card" id="bloco-1">
+      <header class="card-head">
+        <h2>Bloco 1 • Pauta da reunião (base)</h2>
+        <div class="head-actions">
+          <button class="btn" data-target="content-1">Recolher conteúdo</button>
+        </div>
+      </header>
+      <div class="content" id="content-1">
+<pre>Título da reunião: Teste endpoint
+Data: 2026-03-08
+Participantes: x
+
+Pontos de pauta previstos:
+1)
+2)
+3)
+4)
+
+Decisões tomadas:
+-
+
+Pendências abertas:
+-
+
+Próxima data sugerida de retorno:
+-</pre>
+      </div>
+    </section>
+
+    <section class="card" id="bloco-2">
+      <header class="card-head">
+        <h2>Bloco 2 • Registro da call (anotações/transcrição)</h2>
+        <div class="head-actions">
+          <button class="btn" data-target="content-2">Recolher conteúdo</button>
+        </div>
+      </header>
+      <div class="content" id="content-2">
+<pre>Preencher com os registros da reunião:
+- resumo
+- tópicos discutidos
+- pontos sensíveis
+- próximos passos objetivos</pre>
+      </div>
+    </section>
+
+    <section class="card" id="bloco-3">
+      <header class="card-head">
+        <h2>Bloco 3 • Compilação objetiva dos principais pontos discutidos</h2>
+        <div class="head-actions">
+          <button class="btn" data-target="content-3">Recolher conteúdo</button>
+        </div>
+      </header>
+      <div class="content" id="content-3">
+        <table>
+          <thead>
+            <tr>
+              <th>Assunto da pauta</th>
+              <th>Ponto de vista Lube</th>
+              <th>Ponto de vista Skala</th>
+              <th>Ação principal</th>
+              <th>Responsável</th>
+              <th>Status</th>
+              <th>Janela da call</th>
+              <th>Data de retorno</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td>Todos</td>
+              <td>Não discutido</td>
+              <td></td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+        <p class="muted" style="margin:12px 0 0;">O acompanhamento contínuo (FUP dia a dia) está centralizado no Hub.</p>
+      </div>
+    </section>
+
+    <section class="card">
+      <header class="card-head">
+        <h2>Acompanhamento Contínuo</h2>
+        <div class="head-actions">
+          <a class="btn" href="../../../index.html">Abrir Hub</a>
+        </div>
+      </header>
+      <div class="content">
+        <p class="muted" style="margin:0;">Use o Painel FUP Central do Hub para registrar retornos do dia a dia entre as reuniões.</p>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const buttons = document.querySelectorAll('.btn[data-target]');
+    buttons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const id = btn.getAttribute('data-target');
+        const el = document.getElementById(id);
+        if (!el) return;
+        const hidden = el.style.display === 'none';
+        el.style.display = hidden ? '' : 'none';
+        btn.textContent = hidden ? 'Recolher conteúdo' : 'Expandir conteúdo';
+      });
+    });
+  </script>
+</body>
+</html>
